@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 11
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "igato", "..\..\proj\igato_console\msvc\igato.vcxproj", "{DF16470C-9812-D7B2-3E0B-9FD308EB4C5B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A8B7BAA-9EA1-E87E-A2BB-199F503031B5} = {2A8B7BAA-9EA1-E87E-A2BB-199F503031B5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "astro_kit", "..\..\proj\astro_kit\msvc\astro_kit.vcxproj", "{EC701D59-B767-CCDF-B042-BBA25183F26B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "astro_kit_test", "..\..\proj\astro_kit_test\msvc\astro_kit_test.vcxproj", "{5096B7DF-61B0-663B-E127-C120EBD33F6E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "igato_core", "..\..\proj\igato_core\msvc\igato_core.vcxproj", "{2A8B7BAA-9EA1-E87E-A2BB-199F503031B5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "igato_core_test", "..\..\proj\igato_core_test\msvc\igato_core_test.vcxproj", "{D3DE24E3-6FDE-88E1-D638-5A1CDBC3A2B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A8B7BAA-9EA1-E87E-A2BB-199F503031B5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2A8B7BAA-9EA1-E87E-A2BB-199F503031B5}.Debug|Win32.Build.0 = Debug|Win32
+		{2A8B7BAA-9EA1-E87E-A2BB-199F503031B5}.Release|Win32.ActiveCfg = Release|Win32
+		{2A8B7BAA-9EA1-E87E-A2BB-199F503031B5}.Release|Win32.Build.0 = Release|Win32
+		{5096B7DF-61B0-663B-E127-C120EBD33F6E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5096B7DF-61B0-663B-E127-C120EBD33F6E}.Debug|Win32.Build.0 = Debug|Win32
+		{5096B7DF-61B0-663B-E127-C120EBD33F6E}.Release|Win32.ActiveCfg = Release|Win32
+		{5096B7DF-61B0-663B-E127-C120EBD33F6E}.Release|Win32.Build.0 = Release|Win32
+		{D3DE24E3-6FDE-88E1-D638-5A1CDBC3A2B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D3DE24E3-6FDE-88E1-D638-5A1CDBC3A2B2}.Debug|Win32.Build.0 = Debug|Win32
+		{D3DE24E3-6FDE-88E1-D638-5A1CDBC3A2B2}.Release|Win32.ActiveCfg = Release|Win32
+		{D3DE24E3-6FDE-88E1-D638-5A1CDBC3A2B2}.Release|Win32.Build.0 = Release|Win32
+		{DF16470C-9812-D7B2-3E0B-9FD308EB4C5B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF16470C-9812-D7B2-3E0B-9FD308EB4C5B}.Debug|Win32.Build.0 = Debug|Win32
+		{DF16470C-9812-D7B2-3E0B-9FD308EB4C5B}.Release|Win32.ActiveCfg = Release|Win32
+		{DF16470C-9812-D7B2-3E0B-9FD308EB4C5B}.Release|Win32.Build.0 = Release|Win32
+		{EC701D59-B767-CCDF-B042-BBA25183F26B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EC701D59-B767-CCDF-B042-BBA25183F26B}.Debug|Win32.Build.0 = Debug|Win32
+		{EC701D59-B767-CCDF-B042-BBA25183F26B}.Release|Win32.ActiveCfg = Release|Win32
+		{EC701D59-B767-CCDF-B042-BBA25183F26B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{7f721bee-4a69-4194-83b6-b280dfd17a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ext">
+      <UniqueIdentifier>{96443a3a-38ad-4d92-8bcf-233e6eb071a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ext\gameplay">
+      <UniqueIdentifier>{4103265a-dd3e-4e68-8794-c9d5a0e7a88f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Base.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Orbit.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Transformation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ext\gameplay\src\Vector3.h">
+      <Filter>ext\gameplay</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Orbit.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Transformation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\gameplay\src\Vector3.cpp">
+      <Filter>ext\gameplay</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\ext\gameplay\src\Vector3.inl">
+      <Filter>ext\gameplay</Filter>
+    </None>
+  </ItemGroup>
+</Project>
