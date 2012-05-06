@@ -1,0 +1,35 @@
+# Compiled Object files #
+###################
+*.obj
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+############################
+*.so
+
+# Compiled Static libraries
+###########################
+*.lai
+*.la
+*.a
+
+# Visual Studio #
+#################
+*.ilk
+*.lnk
+*.pdb
+*.sdf
+*.aps
+*.opensdf
+
+# Packages #
+############
+*.7z
+*.zip
+*.rar
+
+# Logs and databases #
+######################
+*.log
