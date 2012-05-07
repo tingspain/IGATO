@@ -1,7 +1,5 @@
 #pragma once
-
-// Forward declarations
-class Vector3;
+#include "Base.h"
 
 /// Transform a 3D vector from perifocal to inertial coordinates.
 /**

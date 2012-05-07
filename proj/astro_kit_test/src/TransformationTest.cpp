@@ -45,13 +45,26 @@ TEST_F(TransformationTest, InputAnglesAreZero)
     EXPECT_EQ(_perifocalVector.z, _inertialVector.z);
 }
 
-/// Test problem: Orbital Mechanics for Engineering Students 1st Edition, Howard Curtis, Example 4.5.
-TEST_F(TransformationTest, SolvesCurtisTestProblem)
+/// Test Case: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Example 2-6.
+TEST_F(TransformationTest, SolvesValladoTestCase)
+{
+    _perifocalVector = Vector3(-0.0731819, 1.7947281, 0.0); // units are ER
+    _incl = 87.87 * MATH_DEG_TO_RAD;
+    _raan = 227.89 * MATH_DEG_TO_RAD;
+    _omega = 53.38 * MATH_DEG_TO_RAD;
+    Perifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    EXPECT_NEAR(1.02308, _inertialVector.x, 1e-4);
+    EXPECT_NEAR(1.07579, _inertialVector.y, 1e-4);
+    EXPECT_NEAR(1.01113, _inertialVector.z, 1e-4);
+}
+
+/// Test Case: Orbital Mechanics for Engineering Students 1st Edition, Howard Curtis, Example 4.5.
+TEST_F(TransformationTest, SolvesCurtisTestCase)
 {
     _perifocalVector = Vector3(6285.0, 3628.6, 0.0);
     _incl = 30.0 * MATH_DEG_TO_RAD;
     _raan = 40.0 * MATH_DEG_TO_RAD;
-    _omega = 60.0 * MATH_DEG_TO_RAD;;
+    _omega = 60.0 * MATH_DEG_TO_RAD;
     Perifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
     EXPECT_NEAR(-4040.0, _inertialVector.x, 1.0);
     EXPECT_NEAR(4815.0, _inertialVector.y, 1.0);

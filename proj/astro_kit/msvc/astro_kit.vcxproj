@@ -15,13 +15,13 @@
     <ClInclude Include="..\src\Base.h" />
     <ClInclude Include="..\src\Orbit.h" />
     <ClInclude Include="..\src\Transformation.h" />
-    <ClInclude Include="..\src\Utility.h" />
+    <ClInclude Include="..\src\KeplersEquations.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\ext\gameplay\src\Vector3.cpp" />
     <ClCompile Include="..\src\Orbit.cpp" />
     <ClCompile Include="..\src\Transformation.cpp" />
-    <ClCompile Include="..\src\Utility.cpp" />
+    <ClCompile Include="..\src\KeplersEquations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\ext\gameplay\src\Vector3.inl" />

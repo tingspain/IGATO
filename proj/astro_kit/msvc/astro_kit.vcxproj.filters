@@ -22,14 +22,14 @@
     <ClInclude Include="..\src\Transformation.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Utility.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Base.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ext\gameplay\src\Vector3.h">
       <Filter>ext\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\KeplersEquations.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -39,11 +39,11 @@
     <ClCompile Include="..\src\Transformation.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Utility.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ext\gameplay\src\Vector3.cpp">
       <Filter>ext\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\KeplersEquations.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

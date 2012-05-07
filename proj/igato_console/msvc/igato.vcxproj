@@ -69,6 +69,12 @@
       <AdditionalDependencies>astro_kitd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
+    <PostBuildEvent>
+      <Command>set CURRENT_DIR = %CD%
+cd ..\..\..\api/
+RunDoxygen.bat
+cd %CURRENT_DIR%</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -91,6 +97,12 @@
       <AdditionalDependencies>astro_kit.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
+    <PostBuildEvent>
+      <Command>set CURRENT_DIR = %CD%
+cd ..\..\..\api/
+RunDoxygen.bat
+cd %CURRENT_DIR%</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp" />

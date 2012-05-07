@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector3.h"
+#include "Base.h"
 
 struct StateVector
 {
@@ -11,11 +11,11 @@ struct Coes
 {
     double a;       /// semimajor axis;
     double ecc;     /// eccentricity;
-    double w;       /// arguementOfPerigee;
+    double omega;   /// arguementOfPerigee;
     double incl;    /// inclination
     double raan;    /// right ascension of the ascending node
-    double tp;      /// time of perigee
     double theta;   /// true anomaly
+    double tp;      /// time of perigee  
 };
 
 class Orbit
@@ -43,8 +43,31 @@ public:
     
     void Propagate(double timeOfFlight);
 
-    static void ConvertStateVector2Coes(const StateVector& stateVector, Coes* coes);
-    static void ConvertCoes2StateVector(const Coes& coes, StateVector* stateVector);
+    /// Convert state vectors to orbital elements.
+    /**
+     This routine calculates the classical orbital elements (coes) of an object given its position
+     and velocity (state) vectors and the gravitional parameter of the central body.
+
+     Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 9.
+
+     @param stateVector : The position and velocity vectors.
+     @param [out] coes : The computed orbital elements.
+     @param mu : The gravitional parameter.
+    */
+    static void ConvertStateVector2Coes(const StateVector& stateVector, Coes* coes, double mu);
+
+    /// Convert orbital elements to state vectors.
+    /**
+     This routine calculates the position and velocity (state) vectors of an object given its
+     classical orbital elements (coes) and the gravitational parameter of the central body.
+
+     Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 10.
+
+     @param coes : The orbital elements.
+     @param [out] stateVector : The computed position and velocity vectors.
+     @param mu : The gravitational parameter.
+    */
+    static void ConvertCoes2StateVector(const Coes& coes, StateVector* stateVector, double mu);
 
 private:
     void UpdateStateVector() const;

@@ -1,6 +1,4 @@
 #include "Transformation.h"
-#include "Vector3.h"
-#include "Base.h"
 
 void Perifocal2Inertial(const Vector3& perifocalVector, double incl, double raan, double omega, Vector3* inertialVector)
 {

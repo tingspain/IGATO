@@ -1,6 +1,9 @@
 #include "Vector3.h"
 #include "..\..\..\proj/astro_kit/src/Base.h"
 
+namespace gameplay
+{
+
 Vector3::Vector3()
     : x(0.0f), y(0.0f), z(0.0f)
 {
@@ -311,4 +314,6 @@ void Vector3::subtract(const Vector3& v1, const Vector3& v2, Vector3* dst)
     dst->x = v1.x - v2.x;
     dst->y = v1.y - v2.y;
     dst->z = v1.z - v2.z;
+}
+
 }

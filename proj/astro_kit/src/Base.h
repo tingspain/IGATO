@@ -40,6 +40,12 @@ using std::min;
 using std::max;
 using std::modf;
 
+// Common external dependencies
+#include "Vector3.h"
+
+// Bring common external dependency data structures into global namespace
+using gameplay::Vector3;
+
 // Common
 #ifndef NULL
 #define NULL        0
@@ -50,16 +56,25 @@ const double MATH_DEG_TO_RAD    = 0.0174532925;
 const double MATH_RAD_TO_DEG    = 57.29577951f;
 const double MATH_FLOAT_SMALL   = 1.0e-37f;
 const double MATH_TOLERANCE     = 2e-37f;
+const double MATH_EPSILON       = 0.000001;
+const double MATH_INFINITY      = 1.0e37;
 const double MATH_E             = 2.71828182845904523536;
 const double MATH_LOG10E        = 0.4342944819032518;
 const double MATH_LOG2E         = 1.442695040888963387;
 const double MATH_PI            = 3.14159265358979323846;
-#undef M_1_PI
-const double MATH_1_PI          = 0.31830988618379067154;
-const double MATH_PIOVER2       = 1.57079632679489661923;
-const double MATH_PIOVER4       = 0.785398163397448309616;
-const double MATH_PIX2          = 6.28318530717958647693;
-const double MATH_EPSILON       = 0.000001;
+const double MATH_2_PI          = 6.28318530717958647693;
+const double MATH_1_OVER_PI     = 0.31830988618379067154;
+const double MATH_PI_OVER_2     = 1.57079632679489661923;
+const double MATH_PI_OVER_4     = 0.785398163397448309616;
+
+const Vector3 MATH_UNIT_VEC_I   = Vector3(1.0f, 0.0, 0.0);
+const Vector3 MATH_UNIT_VEC_J   = Vector3(0.0f, 1.0, 0.0);
+const Vector3 MATH_UNIT_VEC_K   = Vector3(0.0f, 0.0, 1.0);
+
+// Astrodynamics
+const double ASTRO_AU_TO_KM     = 149597870.66;     // Convert Astronomical Units (AU) to km
+const double ASTRO_MU_SUN       = 132712428000;     // Gravitional Parameter of the Sun (km3/s2)
+const double ASTRO_MU_EARTH     = 398600.4418;      // Gravitional Parameter of the Earth (km3/s2)
 
 // NOMINMAX makes sure that windef.h doesn't add macros min and max
 #ifdef WIN32
@@ -70,6 +85,11 @@ const double MATH_EPSILON       = 0.000001;
 template<typename T>
 inline const T& Clamp(const T& x, const T& lo, const T& hi)
 { return ((x < lo) ? lo : ((x > hi) ? hi : x)); }
+
+/// Returns true if x is between (inclusive) lo and hi.
+template<typename T>
+inline bool IsBetween(const T& x, const T& lo, const T& hi)
+{ return x >= lo && x <= hi; }
 
 /// Returns the mininum of a and b.
 template<typename T>
@@ -97,6 +117,10 @@ inline double Round(double r)
 inline double Round0(double r)
 { return (r > 0.0f) ? floor(r) : ceil(r); }
 
+/// Returns positive one if x is greater than or equal to zero, return negative one otherwise.
+inline double Sign(double x)
+{ return (x >= 0) ? 1.0 : -1.0; }
+
 /// Returns the inverse hyperbolic sine of x.
 inline double asinh(double x)
 { return log(x + sqrt(x*x + 1.0f)); }
@@ -108,10 +132,6 @@ inline double acosh(double x)
 /// Returns the inverse hyperbolic tangent of x.
 inline double atanh(double x)
 { return 0.5f*log((1.0f+x)/(1.0f-x)); }
-
-// Astrodynamics
-const double ASTRO_AU_TO_KM     = 149597870.66;     // Convert Astronomical Units (AU) to km
-const double ASTRO_MU_SUN       = 132712428000;     // Gravitional Parameter of the Sun [km3/s2]
 
 #if defined(WIN32)
     //#pragma warning( disable : 4172 )               // returning address of local variable or temporary

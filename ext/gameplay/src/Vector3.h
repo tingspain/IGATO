@@ -1,6 +1,9 @@
 #ifndef VECTOR3_H_
 #define VECTOR3_H_
 
+namespace gameplay
+{
+
 /**
  * Defines a 3-element floating point vector.
  *
@@ -12,9 +15,10 @@
  *
  * [IGATO] This file has been modified for use in IGATO in the following ways:
  *      1. Floats have been replaced with doubles.
- *      2  Declarations for Matrix and Quaternions were removed.
+ *      2  Forward declaration and includes for Matrix and Quaternion were removed.
  *      3. Vector3.cpp now includes Base.h from the IGATO source instead of GamePlay.
  */
+
 class Vector3
 {
 public:
@@ -445,6 +449,8 @@ public:
  * @return The scaled vector.
  */
 inline const Vector3 operator*(double x, const Vector3& v);
+
+}
 
 #include "Vector3.inl"
 

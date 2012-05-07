@@ -1,5 +1,8 @@
 #include "Vector3.h"
 
+namespace gameplay
+{
+
 inline const Vector3 Vector3::operator+(const Vector3& v) const
 {
     Vector3 result(*this);
@@ -74,4 +77,6 @@ inline const Vector3 operator*(double x, const Vector3& v)
     Vector3 result(v);
     result.scale(x);
     return result;
+}
+
 }

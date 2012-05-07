@@ -100,6 +100,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AstroKitTestMain.cpp" />
+    <ClCompile Include="..\src\KeplersEquationsTest.cpp" />
     <ClCompile Include="..\src\OrbitTest.cpp" />
     <ClCompile Include="..\src\TransformationTest.cpp" />
   </ItemGroup>
