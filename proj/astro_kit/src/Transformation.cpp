@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include "Base.h"
 
-void Perifocal2Inertial(const Vector3& vectorPerifocal, double incl, double raan, double omega, Vector3* vectorInertial)
+void Perifocal2Inertial(const Vector3& perifocalVector, double incl, double raan, double omega, Vector3* inertialVector)
 {
     static Vector3 row1, row2, row3;
 
@@ -27,7 +27,7 @@ void Perifocal2Inertial(const Vector3& vectorPerifocal, double incl, double raan
     row3.y =  (sinIncl * cosOmega);
     row3.z =  (cosIncl);
 
-    vectorInertial->x = row1.dot(vectorPerifocal);
-    vectorInertial->y = row2.dot(vectorPerifocal);
-    vectorInertial->z = row3.dot(vectorPerifocal);
+    inertialVector->x = row1.dot(perifocalVector);
+    inertialVector->y = row2.dot(perifocalVector);
+    inertialVector->z = row3.dot(perifocalVector);
 }

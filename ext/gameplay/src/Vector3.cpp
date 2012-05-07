@@ -6,12 +6,12 @@ Vector3::Vector3()
 {
 }
 
-Vector3::Vector3(float x, float y, float z)
+Vector3::Vector3(double x, double y, double z)
 {
     set(x, y, z);
 }
 
-Vector3::Vector3(const float* array)
+Vector3::Vector3(const double* array)
 {
     set(array);
 }
@@ -28,13 +28,13 @@ Vector3::Vector3(const Vector3& copy)
 
 Vector3 Vector3::fromColor(unsigned int color)
 {
-    float components[3];
+    double components[3];
     int componentIndex = 0;
     for (int i = 2; i >= 0; --i)
     {
         int component = (color >> i*8) & 0x0000ff;
 
-        components[componentIndex++] = static_cast<float>(component) / 255.0f;
+        components[componentIndex++] = static_cast<double>(component) / 255.0f;
     }
 
     Vector3 value(components);
@@ -85,11 +85,11 @@ bool Vector3::isOne() const
     return x == 1.0f && y == 1.0f && z == 1.0f;
 }
 
-float Vector3::angle(const Vector3& v1, const Vector3& v2)
+double Vector3::angle(const Vector3& v1, const Vector3& v2)
 {
-    float dx = v1.y * v2.z - v1.z * v2.y;
-    float dy = v1.z * v2.x - v1.x * v2.z;
-    float dz = v1.x * v2.y - v1.y * v2.x;
+    double dx = v1.y * v2.z - v1.z * v2.y;
+    double dy = v1.z * v2.x - v1.x * v2.z;
+    double dz = v1.x * v2.y - v1.y * v2.x;
 
     return atan2f(sqrt(dx * dx + dy * dy + dz * dz) + MATH_FLOAT_SMALL, dot(v1, v2));
 }
@@ -162,9 +162,9 @@ void Vector3::clamp(const Vector3& v, const Vector3& min, const Vector3& max, Ve
 
 void Vector3::cross(const Vector3& v)
 {
-    float tx = (y * v.z) - (z * v.y);
-    float ty = (z * v.x) - (x * v.z);
-    float tz = (x * v.y) - (y * v.x);
+    double tx = (y * v.z) - (z * v.y);
+    double ty = (z * v.x) - (x * v.z);
+    double tz = (x * v.y) - (y * v.x);
     x = tx;
     y = ty;
     z = tz;
@@ -174,48 +174,48 @@ void Vector3::cross(const Vector3& v1, const Vector3& v2, Vector3* dst)
 {
     assert(dst);
 
-    float x = (v1.y * v2.z) - (v1.z * v2.y);
-    float y = (v1.z * v2.x) - (v1.x * v2.z);
-    float z = (v1.x * v2.y) - (v1.y * v2.x);
+    double x = (v1.y * v2.z) - (v1.z * v2.y);
+    double y = (v1.z * v2.x) - (v1.x * v2.z);
+    double z = (v1.x * v2.y) - (v1.y * v2.x);
     dst->x = x;
     dst->y = y;
     dst->z = z;
 }
 
-float Vector3::distance(const Vector3& v) const
+double Vector3::distance(const Vector3& v) const
 {
-    float dx = v.x - x;
-    float dy = v.y - y;
-    float dz = v.z - z;
+    double dx = v.x - x;
+    double dy = v.y - y;
+    double dz = v.z - z;
 
     return sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-float Vector3::distanceSquared(const Vector3& v) const
+double Vector3::distanceSquared(const Vector3& v) const
 {
-    float dx = v.x - x;
-    float dy = v.y - y;
-    float dz = v.z - z;
+    double dx = v.x - x;
+    double dy = v.y - y;
+    double dz = v.z - z;
 
     return (dx * dx + dy * dy + dz * dz);
 }
 
-float Vector3::dot(const Vector3& v) const
+double Vector3::dot(const Vector3& v) const
 {
     return (x * v.x + y * v.y + z * v.z);
 }
 
-float Vector3::dot(const Vector3& v1, const Vector3& v2)
+double Vector3::dot(const Vector3& v1, const Vector3& v2)
 {
     return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
 }
 
-float Vector3::length() const
+double Vector3::length() const
 {
     return sqrt(x * x + y * y + z * z);
 }
 
-float Vector3::lengthSquared() const
+double Vector3::lengthSquared() const
 {
     return (x * x + y * y + z * z);
 }
@@ -244,7 +244,7 @@ void Vector3::normalize(Vector3* dst) const
         dst->z = z;
     }
 
-    float n = x * x + y * y + z * z;
+    double n = x * x + y * y + z * z;
     // Already normalized.
     if (n == 1.0f)
         return;
@@ -260,21 +260,21 @@ void Vector3::normalize(Vector3* dst) const
     dst->z *= n;
 }
 
-void Vector3::scale(float scalar)
+void Vector3::scale(double scalar)
 {
     x *= scalar;
     y *= scalar;
     z *= scalar;
 }
 
-void Vector3::set(float x, float y, float z)
+void Vector3::set(double x, double y, double z)
 {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-void Vector3::set(const float* array)
+void Vector3::set(const double* array)
 {
     assert(array);
 

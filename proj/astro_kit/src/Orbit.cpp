@@ -1,4 +1,5 @@
 #include "Orbit.h"
+#include "Base.h"
 
 Orbit::Orbit(double mu)
 {
@@ -77,6 +78,7 @@ void Orbit::UpdateCoes() const
 
 void Orbit::Propagate(double timeOfFlight)
 {
+
 }
 
 void Orbit::ConvertStateVector2Coes(const StateVector& stateVector, Coes* coes)

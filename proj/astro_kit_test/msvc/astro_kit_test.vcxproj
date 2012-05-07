@@ -58,7 +58,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\astro_kit\src;E:\Documents\Development\IGATO\ext\gameplay\src;..\..\..\ext/gtest/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\astro_kit/src;..\..\..\ext/gameplay/src;..\..\..\ext/gtest/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -82,7 +82,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\astro_kit\src;E:\Documents\Development\IGATO\ext\gameplay\src;..\..\..\ext/gtest/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\astro_kit/src;..\..\..\ext/gameplay/src;..\..\..\ext/gtest/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -99,8 +99,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\MainTest.cpp" />
+    <ClCompile Include="..\src\AstroKitTestMain.cpp" />
     <ClCompile Include="..\src\OrbitTest.cpp" />
+    <ClCompile Include="..\src\TransformationTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\astro_kit\msvc\astro_kit.vcxproj">

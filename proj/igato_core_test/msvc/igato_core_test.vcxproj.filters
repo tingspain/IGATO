@@ -6,7 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\MainTest.cpp">
+    <ClCompile Include="..\src\IgatoCoreTestMain.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

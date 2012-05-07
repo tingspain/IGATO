@@ -10,7 +10,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\igato_main.cpp">
+    <ClCompile Include="..\src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

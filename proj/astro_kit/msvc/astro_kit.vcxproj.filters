@@ -16,9 +16,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Base.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Orbit.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -26,6 +23,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Utility.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Base.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ext\gameplay\src\Vector3.h">

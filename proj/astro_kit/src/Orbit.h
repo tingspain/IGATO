@@ -9,13 +9,13 @@ struct StateVector
 
 struct Coes
 {
-    double a;       // semimajor axis;
-    double e;       // eccentricity;
-    double w;       // arguementOfPerigee;
-    double i;       // inclination
-    double raan;    // right ascension of the ascending node
-    double tp;      // time of perigee
-    double theta;   // true anomaly
+    double a;       /// semimajor axis;
+    double ecc;     /// eccentricity;
+    double w;       /// arguementOfPerigee;
+    double incl;    /// inclination
+    double raan;    /// right ascension of the ascending node
+    double tp;      /// time of perigee
+    double theta;   /// true anomaly
 };
 
 class Orbit
@@ -53,6 +53,7 @@ private:
 private:
     double _mu;
     double _radius;
+
     mutable StateVector _stateVector;
     mutable Coes _coes;
 

@@ -33,14 +33,14 @@ inline const Vector3 Vector3::operator-() const
     return result;
 }
 
-inline const Vector3 Vector3::operator*(float x) const
+inline const Vector3 Vector3::operator*(double x) const
 {
     Vector3 result(*this);
     result.scale(x);
     return result;
 }
 
-inline Vector3& Vector3::operator*=(float x)
+inline Vector3& Vector3::operator*=(double x)
 {
     scale(x);
     return *this;
@@ -69,7 +69,7 @@ inline bool Vector3::operator!=(const Vector3& v) const
     return x!=v.x || y!=v.y || z!=v.z;
 }
 
-inline const Vector3 operator*(float x, const Vector3& v)
+inline const Vector3 operator*(double x, const Vector3& v)
 {
     Vector3 result(v);
     result.scale(x);

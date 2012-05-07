@@ -1,5 +1,5 @@
 #pragma once
-// Base file for common includes, constants, and macros.
+// Base file for common includes, constants, and functions.
 // Reference: GamePlay 3D game framework (gameplay3d.org) 
 
 // C/C++
@@ -46,61 +46,72 @@ using std::modf;
 #endif
 
 // Math
-#define MATH_DEG_TO_RAD(x)          ((x) * 0.0174532925f)
-#define MATH_RAD_TO_DEG(x)          ((x)* 57.29577951f)
-#define MATH_FLOAT_SMALL            1.0e-37f
-#define MATH_TOLERANCE              2e-37f
-#define MATH_E                      2.71828182845904523536f
-#define MATH_LOG10E                 0.4342944819032518f
-#define MATH_LOG2E                  1.442695040888963387f
-#define MATH_PI                     3.14159265358979323846f
-#define MATH_PIOVER2                1.57079632679489661923f
-#define MATH_PIOVER4                0.785398163397448309616f
-#define MATH_PIX2                   6.28318530717958647693f
-#define MATH_EPSILON                0.000001f
-#ifndef M_1_PI
-#define M_1_PI                      0.31830988618379067154
-#endif
-
-//const double MATH_DEG_TO_RAD    = 0.0174532925;
-//const double MATH_RAD_TO_DEG    = 57.29577951f;
-//const double MATH_FLOAT_SMALL   = 1.0e-37f;
-//const double MATH_TOLERANCE     = 2e-37f;
-//const double MATH_E             = 2.71828182845904523536;
-//const double MATH_LOG10E        = 0.4342944819032518;
-//const double MATH_LOG2E         = 1.442695040888963387;
-//const double MATH_PI            = 3.14159265358979323846;
-//const double MATH_1_PI          = 0.31830988618379067154;
-//const double MATH_PIOVER2       = 1.57079632679489661923;
-//const double MATH_PIOVER4       = 0.785398163397448309616;
-//const double MATH_PIX2          = 6.28318530717958647693;
-//const double MATH_EPSILON       = 0.000001;
-
-#define MATH_RANDOM_MINUS1_1()      ((2.0f*((float)rand()/RAND_MAX))-1.0f)      // Returns a random float between -1 and 1.
-#define MATH_RANDOM_0_1()           ((float)rand()/RAND_MAX)                    // Returns a random float between 0 and 1.
-#define MATH_CLAMP(x, lo, hi)       ((x < lo) ? lo : ((x > hi) ? hi : x))       // Clamps x between lo and hi.
-
-template<typename T>
-T MathClamp(T x, T low, T hi)
-{
-    return ((x < lo) ? lo : ((x > hi) ? hi : x));
-}
-
-#ifdef WIN32
-    inline float round(float r)
-    {
-        return (r > 0.0f) ? floor(r + 0.5f) : ceil(r - 0.5f);
-    }
-#endif
+const double MATH_DEG_TO_RAD    = 0.0174532925;
+const double MATH_RAD_TO_DEG    = 57.29577951f;
+const double MATH_FLOAT_SMALL   = 1.0e-37f;
+const double MATH_TOLERANCE     = 2e-37f;
+const double MATH_E             = 2.71828182845904523536;
+const double MATH_LOG10E        = 0.4342944819032518;
+const double MATH_LOG2E         = 1.442695040888963387;
+const double MATH_PI            = 3.14159265358979323846;
+#undef M_1_PI
+const double MATH_1_PI          = 0.31830988618379067154;
+const double MATH_PIOVER2       = 1.57079632679489661923;
+const double MATH_PIOVER4       = 0.785398163397448309616;
+const double MATH_PIX2          = 6.28318530717958647693;
+const double MATH_EPSILON       = 0.000001;
 
 // NOMINMAX makes sure that windef.h doesn't add macros min and max
 #ifdef WIN32
     #define NOMINMAX
 #endif
 
+/// Clamps x between lo and hi.
+template<typename T>
+inline const T& Clamp(const T& x, const T& lo, const T& hi)
+{ return ((x < lo) ? lo : ((x > hi) ? hi : x)); }
+
+/// Returns the mininum of a and b.
+template<typename T>
+inline const T& Min(const T &a, const T &b)
+{ return a < b ? a : b; }
+
+/// Returns the maximum of a and b.
+template<typename T>
+inline const T& Max(const T &a, const T &b)
+{ return a > b ? a : b; }
+
+/// Returns a random double between 0 and 1.
+inline double Random0_1()
+{ return (double)rand()/RAND_MAX; }
+
+/// Returns a random double between -1 and 1.
+inline double RandomMinus1_1()
+{ return 2.0f*Random0_1() - 1.0f; }
+
+/// Returns r rounded to the nearest int (0.5 is rounded up)
+inline double Round(double r)
+{ return (r > 0.0f) ? floor(r + 0.5f) : ceil(r - 0.5f); }
+
+/// Returns r rounded towards zero.
+inline double Round0(double r)
+{ return (r > 0.0f) ? floor(r) : ceil(r); }
+
+/// Returns the inverse hyperbolic sine of x.
+inline double asinh(double x)
+{ return log(x + sqrt(x*x + 1.0f)); }
+
+/// Returns the inverse hyperbolic cosine of x.
+inline double acosh(double x)
+{ return log(x + sqrt(x*x - 1.0)); }
+
+/// Returns the inverse hyperbolic tangent of x.
+inline double atanh(double x)
+{ return 0.5f*log((1.0f+x)/(1.0f-x)); }
+
 // Astrodynamics
-#define ASTRO_AU_TO_KM              149597870.66;     // Convert Astronomical Units (AU) to km
-#define ASTRO_MU_SUN                132712428000;     // Gravitional Parameter of the Sun [km3/s2]
+const double ASTRO_AU_TO_KM     = 149597870.66;     // Convert Astronomical Units (AU) to km
+const double ASTRO_MU_SUN       = 132712428000;     // Gravitional Parameter of the Sun [km3/s2]
 
 #if defined(WIN32)
     //#pragma warning( disable : 4172 )               // returning address of local variable or temporary

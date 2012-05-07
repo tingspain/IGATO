@@ -9,6 +9,11 @@
  * Other uses of directional vectors may wish to leave
  * the magnitude of the vector intact. When used as a point,
  * the elements of the vector represent a position in 3D space.
+ *
+ * [IGATO] This file has been modified for use in IGATO in the following ways:
+ *      1. Floats have been replaced with doubles.
+ *      2  Declarations for Matrix and Quaternions were removed.
+ *      3. Vector3.cpp now includes Base.h from the IGATO source instead of GamePlay.
  */
 class Vector3
 {
@@ -17,17 +22,17 @@ public:
     /**
      * The x-coordinate.
      */
-    float x;
+    double x;
 
     /**
      * The y-coordinate.
      */
-    float y;
+    double y;
 
     /**
      * The z-coordinate.
      */
-    float z;
+    double z;
 
     /**
      * Constructs a new vector initialized to all zeros.
@@ -41,14 +46,14 @@ public:
      * @param y The y coordinate.
      * @param z The z coordinate.
      */
-    Vector3(float x, float y, float z);
+    Vector3(double x, double y, double z);
 
     /**
      * Constructs a new vector from the values in the specified array.
      *
      * @param array An array containing the elements of the vector in the order x, y, z.
      */
-    Vector3(const float* array);
+    Vector3(const double* array);
 
     /**
      * Constructs a vector that describes the direction between the specified points.
@@ -137,7 +142,7 @@ public:
      * 
      * @return The angle between the two vectors (in radians).
      */
-    static float angle(const Vector3& v1, const Vector3& v2);
+    static double angle(const Vector3& v1, const Vector3& v2);
 
 
     /**
@@ -199,7 +204,7 @@ public:
      * 
      * @see distanceSquared
      */
-    float distance(const Vector3& v) const;
+    double distance(const Vector3& v) const;
 
     /**
      * Returns the squared distance between this vector and v.
@@ -215,7 +220,7 @@ public:
      * 
      * @see distance
      */
-    float distanceSquared(const Vector3& v) const;
+    double distanceSquared(const Vector3& v) const;
 
     /**
      * Returns the dot product of this vector and the specified vector.
@@ -224,7 +229,7 @@ public:
      * 
      * @return The dot product.
      */
-    float dot(const Vector3& v) const;
+    double dot(const Vector3& v) const;
 
     /**
      * Returns the dot product between the specified vectors.
@@ -234,7 +239,7 @@ public:
      * 
      * @return The dot product between the vectors.
      */
-    static float dot(const Vector3& v1, const Vector3& v2);
+    static double dot(const Vector3& v1, const Vector3& v2);
 
     /**
      * Computes the length of this vector.
@@ -243,7 +248,7 @@ public:
      * 
      * @see lengthSquared
      */
-    float length() const;
+    double length() const;
 
     /**
      * Returns the squared length of this vector.
@@ -257,7 +262,7 @@ public:
      * 
      * @see length
      */
-    float lengthSquared() const;
+    double lengthSquared() const;
 
     /**
      * Negates this vector.
@@ -293,7 +298,7 @@ public:
      *
      * @param scalar The scalar value.
      */
-    void scale(float scalar);
+    void scale(double scalar);
 
     /**
      * Sets the elements of this vector to the specified values.
@@ -302,14 +307,14 @@ public:
      * @param y The new y coordinate.
      * @param z The new z coordinate.
      */
-    void set(float x, float y, float z);
+    void set(double x, double y, double z);
 
     /**
      * Sets the elements of this vector from the values in the specified array.
      *
      * @param array An array containing the elements of the vector in the order x, y, z.
      */
-    void set(const float* array);
+    void set(const double* array);
 
     /**
      * Sets the elements of this vector to those in the specified vector.
@@ -394,7 +399,7 @@ public:
      * @param x The value to scale by.
      * @return The scaled vector.
      */
-    inline const Vector3 operator*(float x) const;
+    inline const Vector3 operator*(double x) const;
 
     /**
      * Scales this vector by the given value.
@@ -402,7 +407,7 @@ public:
      * @param x The value to scale by.
      * @return This vector, after the scale occurs.
      */
-    inline Vector3& operator*=(float x);
+    inline Vector3& operator*=(double x);
 
     /**
      * Determines if this vector is less than the given vector.
@@ -439,7 +444,7 @@ public:
  * @param v The vector to scale.
  * @return The scaled vector.
  */
-inline const Vector3 operator*(float x, const Vector3& v);
+inline const Vector3 operator*(double x, const Vector3& v);
 
 #include "Vector3.inl"
 

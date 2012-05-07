@@ -9,7 +9,10 @@
     <ClCompile Include="..\src\OrbitTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MainTest.cpp">
+    <ClCompile Include="..\src\TransformationTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AstroKitTestMain.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
