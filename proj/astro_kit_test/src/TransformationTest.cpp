@@ -1,3 +1,21 @@
+/*****************************************************************************
+ *   IGATO - Interplanetary Gravity Assist Trajectory Optimizer              *
+ *   Copyright (C) 2012 Jason Bryan (Jmbryan10@gmail.com)                    *
+ *                                                                           *
+ *   IGATO is free software; you can redistribute it and/or modify           *
+ *   it under the terms of the GNU General Public License as published by    *
+ *   the Free Software Foundation; either version 2 of the License, or       *
+ *   (at your option) any later version.                                     *
+ *                                                                           *
+ *   IGATO is distributed in the hope that it will be useful,                *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ *   GNU General Public License for more details.                            *
+ *                                                                           *
+ *   You should have received a copy of the GNU General Public License       *
+ *   along with IGATO; if not, see http://www.gnu.org/licenses/              *
+ *****************************************************************************/
+
 #include "gtest/gtest.h"
 #include "Transformation.h"
 #include "Vector3.h"
@@ -27,7 +45,7 @@ TEST_F(TransformationTest, InputVectorIsZero)
     _incl = 30.0 * MATH_DEG_TO_RAD;
     _raan = 40.0 * MATH_DEG_TO_RAD;
     _omega = 60.0 * MATH_DEG_TO_RAD;
-    Perifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
     EXPECT_EQ(0.0, _inertialVector.x);
     EXPECT_EQ(0.0, _inertialVector.y);
     EXPECT_EQ(0.0, _inertialVector.z);
@@ -39,7 +57,7 @@ TEST_F(TransformationTest, InputAnglesAreZero)
     _incl = 0.0;
     _raan = 0.0;
     _omega = 0.0;
-    Perifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
     EXPECT_EQ(_perifocalVector.x, _inertialVector.x);
     EXPECT_EQ(_perifocalVector.y, _inertialVector.y);
     EXPECT_EQ(_perifocalVector.z, _inertialVector.z);
@@ -52,7 +70,7 @@ TEST_F(TransformationTest, SolvesValladoTestCase)
     _incl = 87.87 * MATH_DEG_TO_RAD;
     _raan = 227.89 * MATH_DEG_TO_RAD;
     _omega = 53.38 * MATH_DEG_TO_RAD;
-    Perifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
     EXPECT_NEAR(1.02308, _inertialVector.x, 1e-4);
     EXPECT_NEAR(1.07579, _inertialVector.y, 1e-4);
     EXPECT_NEAR(1.01113, _inertialVector.z, 1e-4);
@@ -65,7 +83,7 @@ TEST_F(TransformationTest, SolvesCurtisTestCase)
     _incl = 30.0 * MATH_DEG_TO_RAD;
     _raan = 40.0 * MATH_DEG_TO_RAD;
     _omega = 60.0 * MATH_DEG_TO_RAD;
-    Perifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
     EXPECT_NEAR(-4040.0, _inertialVector.x, 1.0);
     EXPECT_NEAR(4815.0, _inertialVector.y, 1.0);
     EXPECT_NEAR(3629.0, _inertialVector.z, 1.0);

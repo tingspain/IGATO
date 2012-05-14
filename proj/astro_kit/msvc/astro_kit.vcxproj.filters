@@ -31,6 +31,15 @@
     <ClInclude Include="..\src\KeplersEquations.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Conversions.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Lambert.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OrbitalBody.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Orbit.cpp">
@@ -43,6 +52,15 @@
       <Filter>ext\gameplay</Filter>
     </ClCompile>
     <ClCompile Include="..\src\KeplersEquations.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Conversions.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Lambert.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OrbitalBody.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

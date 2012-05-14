@@ -13,13 +13,19 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\ext\gameplay\src\Vector3.h" />
     <ClInclude Include="..\src\Base.h" />
+    <ClInclude Include="..\src\Conversions.h" />
+    <ClInclude Include="..\src\Lambert.h" />
     <ClInclude Include="..\src\Orbit.h" />
+    <ClInclude Include="..\src\OrbitalBody.h" />
     <ClInclude Include="..\src\Transformation.h" />
     <ClInclude Include="..\src\KeplersEquations.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\ext\gameplay\src\Vector3.cpp" />
+    <ClCompile Include="..\src\Conversions.cpp" />
+    <ClCompile Include="..\src\Lambert.cpp" />
     <ClCompile Include="..\src\Orbit.cpp" />
+    <ClCompile Include="..\src\OrbitalBody.cpp" />
     <ClCompile Include="..\src\Transformation.cpp" />
     <ClCompile Include="..\src\KeplersEquations.cpp" />
   </ItemGroup>

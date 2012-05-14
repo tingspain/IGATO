@@ -1,6 +1,24 @@
+/*****************************************************************************
+ *   IGATO - Interplanetary Gravity Assist Trajectory Optimizer              *
+ *   Copyright (C) 2012 Jason Bryan (Jmbryan10@gmail.com)                    *
+ *                                                                           *
+ *   IGATO is free software; you can redistribute it and/or modify           *
+ *   it under the terms of the GNU General Public License as published by    *
+ *   the Free Software Foundation; either version 2 of the License, or       *
+ *   (at your option) any later version.                                     *
+ *                                                                           *
+ *   IGATO is distributed in the hope that it will be useful,                *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ *   GNU General Public License for more details.                            *
+ *                                                                           *
+ *   You should have received a copy of the GNU General Public License       *
+ *   along with IGATO; if not, see http://www.gnu.org/licenses/              *
+ *****************************************************************************/
+
 #include "Orbit.h"
 #include "KeplersEquations.h"
-#include "Transformation.h"
+#include "Conversions.h"
 
 Orbit::Orbit(double mu)
 {
@@ -19,10 +37,10 @@ Orbit::Orbit(const Vector3& position, const Vector3& velocity, double mu)
     SetStateVector(position, velocity);
 }
 
-Orbit::Orbit(const Coes& coes, double mu)
+Orbit::Orbit(const OrbitalElements& coes, double mu)
 {
     _mu = mu;
-    SetCoes(coes);
+    SetOrbitalElements(coes);
 }
 
 void Orbit::SetStateVector(const StateVector& stateVector)
@@ -38,7 +56,7 @@ void Orbit::SetStateVector(const Vector3& position, const Vector3& velocity)
     _coesState = DIRTY;
 }
 
-void Orbit::SetCoes(const Coes& coes)
+void Orbit::SetOrbitalElements(const OrbitalElements& coes)
 {
     _coes = coes;
 
@@ -55,11 +73,11 @@ const StateVector& Orbit::GetStateVector() const
     return _stateVector;
 }
 
-const Coes& Orbit::GetCoes() const
+const OrbitalElements& Orbit::GetOrbitalElements() const
 {
     if (_coesState == DIRTY)
     {
-        UpdateCoes();
+        UpdateOrbitalElements();
     }
 
     return _coes;
@@ -67,112 +85,17 @@ const Coes& Orbit::GetCoes() const
 
 void Orbit::UpdateStateVector() const
 {
-    ConvertCoes2StateVector(_coes, &_stateVector, _mu);   
+    ConvertOrbitalElements2StateVector(_coes, &_stateVector);   
     _stateVectorState = CLEAN;
 }
 
-void Orbit::UpdateCoes() const
+void Orbit::UpdateOrbitalElements() const
 {
-    ConvertStateVector2Coes(_stateVector, &_coes, _mu);
+    ConvertStateVector2OrbitalElements(_stateVector, &_coes);
     _coesState = CLEAN;
 }
 
 void Orbit::Propagate(double timeOfFlight)
 {
 
-}
-
-void Orbit::ConvertStateVector2Coes(const StateVector& stateVector, Coes* coes, double mu)
-{
-    static Vector3 H, N;
-
-    // useful references
-    const Vector3& R = stateVector.position;
-    const Vector3& V = stateVector.velocity;
-
-    double r = R.length();
-    double v = V.length();
-    double rv = R.dot(V);
-
-    Vector3::cross(R, V, &H);
-    double h = H.length(); // specific angular momentum
-
-    Vector3::cross(MATH_UNIT_VEC_K, H, &N); 
-    double n = N.length();
-
-    Vector3 Ecc = 1/mu * ((v*v - mu/r)*R - rv*V);
-    double ecc = Ecc.length(); // eccentricity
-
-    double a; // semimajor axis
-    double p; // semiparameter
-    if (ecc != 1.0) // non parabolic orbit
-    {
-        double xi = 0.5*v*v - mu/r; // specific mechanical energy
-        a = -0.5*mu/xi;
-        p = a*(1 - ecc*ecc);
-    }
-    else // parabolic orbit
-    {
-        a = MATH_INFINITY;
-        p = h*h/mu;    
-    }
-
-    double incl = acos(H.z / h); // inclination
-
-    double raan = acos(N.x / n); // right ascension of the ascending node
-    if (N.y < 0)
-    {
-        raan = MATH_2_PI - raan;
-    }
-
-    double necc = N.dot(Ecc);
-    double omega = acos(necc / n / ecc); // arguement of perigee
-    if (Ecc.z < 0.0)
-    {
-        omega = MATH_2_PI - omega;
-    }
-
-    double eccr = Ecc.dot(R);
-    double theta = acos(eccr / ecc / r); // true anomaly
-    if (rv < 0.0)
-    {
-        theta = MATH_2_PI - theta;
-    }
-
-    coes->a = a;
-    coes->ecc = ecc;
-    coes->omega = omega;
-    coes->incl = incl;
-    coes->raan = raan;
-    coes->theta = theta;
-}
-
-void Orbit::ConvertCoes2StateVector(const Coes& coes, StateVector* stateVector, double mu)
-{
-    static Vector3 R, V;
-
-    double a = coes.a;
-    double ecc = coes.ecc;
-    double omega = coes.omega;
-    double incl = coes.incl;
-    double raan = coes.raan;
-    double theta = coes.theta;
-
-    double p = a*(1.0 - ecc*ecc);
-    double h = sqrt(mu*p);
-
-    double cosTheta = cos(theta);
-    double sinTheta = sin(theta);
-
-    // State vector in perifocal coordinate frame
-    R.x = p*cosTheta / (1.0 + ecc*cosTheta);
-    R.y = p*sinTheta / (1.0 + ecc*cosTheta);
-    R.z = 0.0;
-
-    V.x = -sqrt(mu/p)*sinTheta;
-    V.y = sqrt(mu/p)*(ecc + cosTheta);
-    V.z = 0.0;
-
-    Perifocal2Inertial(R, incl, raan, omega, &stateVector->position);
-    Perifocal2Inertial(V, incl, raan, omega, &stateVector->velocity);
 }

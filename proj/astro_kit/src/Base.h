@@ -1,3 +1,21 @@
+/*****************************************************************************
+ *   IGATO - Interplanetary Gravity Assist Trajectory Optimizer              *
+ *   Copyright (C) 2012 Jason Bryan (Jmbryan10@gmail.com)                    *
+ *                                                                           *
+ *   IGATO is free software; you can redistribute it and/or modify           *
+ *   it under the terms of the GNU General Public License as published by    *
+ *   the Free Software Foundation; either version 2 of the License, or       *
+ *   (at your option) any later version.                                     *
+ *                                                                           *
+ *   IGATO is distributed in the hope that it will be useful,                *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ *   GNU General Public License for more details.                            *
+ *                                                                           *
+ *   You should have received a copy of the GNU General Public License       *
+ *   along with IGATO; if not, see http://www.gnu.org/licenses/              *
+ *****************************************************************************/
+
 #pragma once
 // Base file for common includes, constants, and functions.
 // Reference: GamePlay 3D game framework (gameplay3d.org) 
@@ -40,10 +58,10 @@ using std::min;
 using std::max;
 using std::modf;
 
-// Common external dependencies
+// Common dependencies
 #include "Vector3.h"
 
-// Bring common external dependency data structures into global namespace
+// Bring common dependency data structures into global namespace
 using gameplay::Vector3;
 
 // Common
@@ -51,30 +69,66 @@ using gameplay::Vector3;
 #define NULL        0
 #endif
 
-// Math
-const double MATH_DEG_TO_RAD    = 0.0174532925;
-const double MATH_RAD_TO_DEG    = 57.29577951f;
-const double MATH_FLOAT_SMALL   = 1.0e-37f;
-const double MATH_TOLERANCE     = 2e-37f;
-const double MATH_EPSILON       = 0.000001;
-const double MATH_INFINITY      = 1.0e37;
-const double MATH_E             = 2.71828182845904523536;
-const double MATH_LOG10E        = 0.4342944819032518;
-const double MATH_LOG2E         = 1.442695040888963387;
-const double MATH_PI            = 3.14159265358979323846;
-const double MATH_2_PI          = 6.28318530717958647693;
-const double MATH_1_OVER_PI     = 0.31830988618379067154;
-const double MATH_PI_OVER_2     = 1.57079632679489661923;
-const double MATH_PI_OVER_4     = 0.785398163397448309616;
+// Fundamental datatypes
+enum OrbitDirection
+{
+    Invalid = -1,
+    Prograde,
+    Retrograde
+};
 
-const Vector3 MATH_UNIT_VEC_I   = Vector3(1.0f, 0.0, 0.0);
-const Vector3 MATH_UNIT_VEC_J   = Vector3(0.0f, 1.0, 0.0);
-const Vector3 MATH_UNIT_VEC_K   = Vector3(0.0f, 0.0, 1.0);
+/// State Vector
+struct StateVector
+{
+    Vector3 position;
+    Vector3 velocity;
+};
+
+/// Classical Orbital Elements
+struct OrbitalElements
+{
+    double a;       /// semimajor axis;
+    double ecc;     /// eccentricity;
+    double omega;   /// arguementOfPerigee;
+    double incl;    /// inclination
+    double raan;    /// right ascension of the ascending node
+    double theta;   /// true anomaly
+    double tp;      /// time of perigee  
+};
+
+// Math
+const double MATH_DEG_TO_RAD        = 0.0174532925;
+const double MATH_RAD_TO_DEG        = 57.29577951f;
+const double MATH_FLOAT_SMALL       = 1.0e-37f;
+const double MATH_NEAR_ZERO         = 2.0e-37f;
+const double MATH_TOLERANCE         = 1.0e-8f;
+const double MATH_INFINITY          = 1.0e37f;
+const double MATH_E                 = 2.71828182845904523536;
+const double MATH_LOG10E            = 0.4342944819032518;
+const double MATH_LOG2E             = 1.442695040888963387;
+const double MATH_PI                = 3.14159265358979323846;
+const double MATH_2_PI              = 6.28318530717958647693;
+const double MATH_1_OVER_PI         = 0.31830988618379067154;
+const double MATH_PI_OVER_2         = 1.57079632679489661923;
+const double MATH_PI_OVER_4         = 0.785398163397448309616;
+const double MATH_DAY_TO_SEC        = 86400.0;
+const double MATH_SEC_TO_DAY        = 1.0 / MATH_DAY_TO_SEC;
+const Vector3 MATH_UNIT_VEC_I       = Vector3(1.0f, 0.0, 0.0);
+const Vector3 MATH_UNIT_VEC_J       = Vector3(0.0f, 1.0, 0.0);
+const Vector3 MATH_UNIT_VEC_K       = Vector3(0.0f, 0.0, 1.0);
 
 // Astrodynamics
-const double ASTRO_AU_TO_KM     = 149597870.66;     // Convert Astronomical Units (AU) to km
-const double ASTRO_MU_SUN       = 132712428000;     // Gravitional Parameter of the Sun (km3/s2)
-const double ASTRO_MU_EARTH     = 398600.4418;      // Gravitional Parameter of the Earth (km3/s2)
+const double ASTRO_AU_TO_KM         = 149597870.66;     // Convert Astronomical Units (AU) to km
+const double ASTRO_ER_TO_KM         = 6378.137;         // Mean equitorial radius of Earth (ER) to km
+const double ASTRO_MU_SUN           = 132712428000;     // Gravitional Parameter of the Sun (km3/s2)
+const double ASTRO_MU_EARTH         = 398600.4418;      // Gravitional Parameter of the Earth
+ 
+// Unit testing
+const double TEST_DU_TOLERANCE      = 1.0e-3;
+const double TEST_VU_TOLERANCE      = 1.0e-3;
+const double TEST_TU_TOLERANCE      = 1.0e-3;
+const double TEST_ANGLE_TOLERANCEE  = 1.0e-3;
+const double TEST_ECC_TOLERANCE     = 1.0e-4;
 
 // NOMINMAX makes sure that windef.h doesn't add macros min and max
 #ifdef WIN32
@@ -86,7 +140,7 @@ template<typename T>
 inline const T& Clamp(const T& x, const T& lo, const T& hi)
 { return ((x < lo) ? lo : ((x > hi) ? hi : x)); }
 
-/// Returns true if x is between (inclusive) lo and hi.
+/// Returns true if x is between lo and hi (inclusive).
 template<typename T>
 inline bool IsBetween(const T& x, const T& lo, const T& hi)
 { return x >= lo && x <= hi; }
@@ -101,11 +155,11 @@ template<typename T>
 inline const T& Max(const T &a, const T &b)
 { return a > b ? a : b; }
 
-/// Returns a random double between 0 and 1.
+/// Returns a random double between 0 and 1 (inclusive).
 inline double Random0_1()
 { return (double)rand()/RAND_MAX; }
 
-/// Returns a random double between -1 and 1.
+/// Returns a random double between -1 and 1 (inclusive).
 inline double RandomMinus1_1()
 { return 2.0f*Random0_1() - 1.0f; }
 
@@ -141,6 +195,45 @@ inline double atanh(double x)
     #pragma warning( disable : 4800 )               // 'type': forcing value to bool 'true' or 'false' (performance warning)
     //#pragma warning( disable : 4996 )               // 'function': was declared deprecated
 #endif
+
+
+///// Print logging
+//void printError(const char* format, ...)
+//{
+//#ifdef WIN32
+//    va_list argptr;
+//    va_start(argptr, format);
+//    fprintf(stderr, "\n");
+//    int sz = vfprintf_s(stderr, format, argptr);
+//    if (sz > 0)
+//    {
+//        char* buf = new char[sz +2];
+//        vsprintf_s(buf, format, argptr);
+//        buf[sz] = '\n';
+//        buf[sz+1] = 0;
+//    }
+//#elif __APPLE__
+//    va_list argptr;
+//    va_start(argptr, format);
+//    vfprintf(stderr, format, argptr);
+//    fprintf(stderr, "\n");
+//    va_end(argptr);
+//#endif
+//}
+//
+//// System Errors
+//#define LOG_ERROR(x) \
+//{ \
+//    LOGI(x); \
+//    assert(#x == 0); \
+//}
+//
+//// Warning macro
+//#ifdef WARN
+//#undef WARN
+//#endif
+//#define WARN(x) printError(x)
+//#define WARN_VARG(x, ...) printError(_XA, __VA_ARGS__) 
 
 //// Assert has special behavior on Windows (for Visual Studio).
 //#ifdef WIN32

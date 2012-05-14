@@ -254,7 +254,7 @@ void Vector3::normalize(Vector3* dst) const
 
     n = sqrt(n);
     // Too close to zero.
-    if (n < MATH_TOLERANCE)
+    if (n < MATH_NEAR_ZERO)
         return;
 
     n = 1.0f / n;

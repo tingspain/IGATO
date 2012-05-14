@@ -1,5 +1,24 @@
+/*****************************************************************************
+ *   IGATO - Interplanetary Gravity Assist Trajectory Optimizer              *
+ *   Copyright (C) 2012 Jason Bryan (Jmbryan10@gmail.com)                    *
+ *                                                                           *
+ *   IGATO is free software; you can redistribute it and/or modify           *
+ *   it under the terms of the GNU General Public License as published by    *
+ *   the Free Software Foundation; either version 2 of the License, or       *
+ *   (at your option) any later version.                                     *
+ *                                                                           *
+ *   IGATO is distributed in the hope that it will be useful,                *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ *   GNU General Public License for more details.                            *
+ *                                                                           *
+ *   You should have received a copy of the GNU General Public License       *
+ *   along with IGATO; if not, see http://www.gnu.org/licenses/              *
+ *****************************************************************************/
+
 #include "gtest/gtest.h"
 #include "Orbit.h"
+#include "Conversions.h"
 #include "Base.h"
 
 // Orbit Fixture
@@ -38,79 +57,73 @@ TEST_F(OrbitTest, IsCorrectMU)
 }
 
 /// Test Case: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Example 2-5.
-TEST(StateVector2CoesTest,  SolvesValladoTestCase)
+TEST(StateVector2OrbitalElementsTest,  SolvesValladoTestCase)
 {
-    double mu = ASTRO_MU_EARTH;
     StateVector stateVector;
-    stateVector.position = Vector3(6524.834, 6862.875, 6448.296);
-    stateVector.velocity = Vector3(4.901327, 5.533756, -1.976341);
-    Coes coes;
-    Orbit::ConvertStateVector2Coes(stateVector, &coes, mu);
-    EXPECT_NEAR(36127.343, coes.a, 1e-1);
-    EXPECT_NEAR(0.832853, coes.ecc, 1e-4);
-    EXPECT_NEAR(87.870*MATH_DEG_TO_RAD, coes.incl, 1e-3);
-    EXPECT_NEAR(53.380*MATH_DEG_TO_RAD, coes.omega, 1e-3);
-    EXPECT_NEAR(227.89*MATH_DEG_TO_RAD, coes.raan, 1e-3);
-    EXPECT_NEAR(92.335*MATH_DEG_TO_RAD, coes.theta, 1e-3);
+    stateVector.position = Vector3(1.023, 1.076, 1.011); // units are ER
+    stateVector.velocity = Vector3(0.62, 0.7, -0.25); // units are VU
+    OrbitalElements coes;
+    ConvertStateVector2OrbitalElements(stateVector, &coes);
+    EXPECT_NEAR(5.664247, coes.a, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(0.832853, coes.ecc, TEST_ECC_TOLERANCE);
+    EXPECT_NEAR(87.870*MATH_DEG_TO_RAD, coes.incl, TEST_ANGLE_TOLERANCE);
+    EXPECT_NEAR(53.380*MATH_DEG_TO_RAD, coes.omega, TEST_ANGLE_TOLERANCE);
+    EXPECT_NEAR(227.89*MATH_DEG_TO_RAD, coes.raan, TEST_ANGLE_TOLERANCE);
+    EXPECT_NEAR(92.335*MATH_DEG_TO_RAD, coes.theta, TEST_ANGLE_TOLERANCE);
 }
 
 /// Test Case: Orbital Mechanics for Engineering Students 1st Edition, Howard Curtis, Example 4.3.
-TEST(StateVector2CoesTest, SolvesCurtisTestCase)
+TEST(StateVector2OrbitalElementsTest, SolvesCurtisTestCase)
 {
-    double mu = ASTRO_MU_EARTH;
     StateVector stateVector;
-    stateVector.position = Vector3(-6045.0, -3490.0, 2500.0);
-    stateVector.velocity = Vector3(-3.457, 6.618, 2.533);
-    Coes coes;
-    Orbit::ConvertStateVector2Coes(stateVector, &coes, mu);
-    EXPECT_NEAR(8788.0, coes.a, 1e-1);
-    EXPECT_NEAR(0.1712, coes.ecc, 1e-4);
-    EXPECT_NEAR(153.2*MATH_DEG_TO_RAD, coes.incl, 1e-3);
-    EXPECT_NEAR(20.07*MATH_DEG_TO_RAD, coes.omega, 1e-3);
-    EXPECT_NEAR(255.3*MATH_DEG_TO_RAD, coes.raan, 1e-3);
-    EXPECT_NEAR(28.45*MATH_DEG_TO_RAD, coes.theta, 1e-3);
+    stateVector.position = Vector3(-0.947769, -0.547182, 0.391964); // units are ER
+    stateVector.velocity = Vector3(-0.437298, 0.837153, 0.320415); // units are VU
+    OrbitalElements coes;
+    ConvertStateVector2OrbitalElements(stateVector, &coes);
+    EXPECT_NEAR(1.377832, coes.a, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(0.1712, coes.ecc, TEST_ECC_TOLERANCE);
+    EXPECT_NEAR(153.2*MATH_DEG_TO_RAD, coes.incl, TEST_ANGLE_TOLERANCE);
+    EXPECT_NEAR(20.07*MATH_DEG_TO_RAD, coes.omega, TEST_ANGLE_TOLERANCE);
+    EXPECT_NEAR(255.3*MATH_DEG_TO_RAD, coes.raan, TEST_ANGLE_TOLERANCE);
+    EXPECT_NEAR(28.45*MATH_DEG_TO_RAD, coes.theta, TEST_ANGLE_TOLERANCE);
 }
 
 /// Test Case: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Example 2-6.
-TEST(Coes2StateVectorTest, SolvesValladoTestCase)
+TEST(OrbitalElements2StateVectorTest, SolvesValladoTestCase)
 {
-    double mu = ASTRO_MU_EARTH;
-    double p = 11067.790;
-    Coes coes;
+    OrbitalElements coes;
+    coes.a = 5.664137; // units are ER
     coes.ecc = 0.83285;
     coes.incl = 87.87 * MATH_DEG_TO_RAD;
     coes.raan = 227.89 * MATH_DEG_TO_RAD;
     coes.omega = 53.38 * MATH_DEG_TO_RAD;
     coes.theta = 92.335 * MATH_DEG_TO_RAD;
-    coes.a = p / (1.0 - coes.ecc*coes.ecc);
     StateVector stateVector;  
-    Orbit::ConvertCoes2StateVector(coes, &stateVector, mu);
-    EXPECT_NEAR(6525.344, stateVector.position.x, 1e-1);
-    EXPECT_NEAR(6861.535, stateVector.position.y, 1e-1);
-    EXPECT_NEAR(6449.125, stateVector.position.z, 1e-1);
-    EXPECT_NEAR(4.902276, stateVector.velocity.x, 1e-4);
-    EXPECT_NEAR(5.533124, stateVector.velocity.y, 1e-4);
-    EXPECT_NEAR(-1.975709, stateVector.velocity.z, 1e-4);
+    ConvertOrbitalElements2StateVector(coes, &stateVector);
+    EXPECT_NEAR(1.02308, stateVector.position.x, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(1.07579, stateVector.position.y, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(1.01113, stateVector.position.z, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(0.62012, stateVector.velocity.x, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(0.69992, stateVector.velocity.y, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(-0.24992, stateVector.velocity.z, TEST_VU_TOLERANCE);
 }
 
 /// Test Case: Orbital Mechanics for Engineering Students 1st Edition, Howard Curtis, Example 4.5.
-TEST(Coes2StateVectorTest, SolvesCurtisTestCase)
+TEST(OrbitalElements2StateVectorTest, SolvesCurtisTestCase)
 {
-    double mu = ASTRO_MU_EARTH;
-    double h = 80000;
-    Coes coes;
+    OrbitalElements coes;
+    coes.a = -2.62226828; // units are ER
     coes.ecc = 1.4;
     coes.incl = 30.0 * MATH_DEG_TO_RAD;
     coes.raan = 40.0 * MATH_DEG_TO_RAD;
     coes.omega = 60.0 * MATH_DEG_TO_RAD;
     coes.theta = 30.0 * MATH_DEG_TO_RAD;
-    coes.a = h*h/mu / (1.0 - coes.ecc*coes.ecc);
     StateVector stateVector;
-    Orbit::ConvertCoes2StateVector(coes, &stateVector, mu);
-    EXPECT_NEAR(-4040.0, stateVector.position.x, 1.0);
-    EXPECT_NEAR(4815.0, stateVector.position.y, 1.0);
-    EXPECT_NEAR(3629.0, stateVector.position.z, 1.0);
-    EXPECT_NEAR(-10.39, stateVector.velocity.x, 1e-2);
-    EXPECT_NEAR(-4.772, stateVector.velocity.y, 1e-2);
-    EXPECT_NEAR(1.744, stateVector.velocity.z, 1e-2);
+    ConvertOrbitalElements2StateVector(coes, &stateVector);
+    EXPECT_NEAR(-0.633414, stateVector.position.x,TEST_DU_TOLERANCE);
+    EXPECT_NEAR(0.754923, stateVector.position.y, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(0.568975, stateVector.position.z, TEST_DU_TOLERANCE);
+    EXPECT_NEAR(-1.314297, stateVector.velocity.x, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(-0.603641, stateVector.velocity.y, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(0.220610, stateVector.velocity.z, TEST_VU_TOLERANCE);
 }

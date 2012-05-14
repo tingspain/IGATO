@@ -1,3 +1,21 @@
+/*****************************************************************************
+ *   IGATO - Interplanetary Gravity Assist Trajectory Optimizer              *
+ *   Copyright (C) 2012 Jason Bryan (Jmbryan10@gmail.com)                    *
+ *                                                                           *
+ *   IGATO is free software; you can redistribute it and/or modify           *
+ *   it under the terms of the GNU General Public License as published by    *
+ *   the Free Software Foundation; either version 2 of the License, or       *
+ *   (at your option) any later version.                                     *
+ *                                                                           *
+ *   IGATO is distributed in the hope that it will be useful,                *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ *   GNU General Public License for more details.                            *
+ *                                                                           *
+ *   You should have received a copy of the GNU General Public License       *
+ *   along with IGATO; if not, see http://www.gnu.org/licenses/              *
+ *****************************************************************************/
+
 #include "KeplersEquations.h"
 #include "Base.h"
 
@@ -19,7 +37,7 @@ double SolveKeplersEquationE(double ecc, double M)
     const int MAX_COUNTER = 10000; // The max number of iteration attempts allowed.
 
     double ratio = 1.0;
-    while (fabs(ratio) > MATH_EPSILON && counter < MAX_COUNTER)
+    while (fabs(ratio) > MATH_TOLERANCE && counter < MAX_COUNTER)
     {
         ratio = (M - E + ecc*sin(E)) / (1 - ecc*cos(E));
         E += ratio;
@@ -68,7 +86,7 @@ double SolveKeplersEquationH(double ecc, double M)
     const int MAX_COUNTER = 10000; // The max number of iteration attempts allowed.
 
     double ratio = 1.0;
-    while (fabs(ratio) > MATH_EPSILON && counter < MAX_COUNTER)
+    while (fabs(ratio) > MATH_TOLERANCE && counter < MAX_COUNTER)
     {
         ratio = (M - ecc*sinh(H) + H) / (ecc*cosh(H) - 1.0);
         H += ratio;

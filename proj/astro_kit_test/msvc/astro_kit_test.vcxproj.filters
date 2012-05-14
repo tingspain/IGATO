@@ -18,5 +18,11 @@
     <ClCompile Include="..\src\KeplersEquationsTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ConversionsTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LambertTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -16,32 +16,25 @@
  *   along with IGATO; if not, see http://www.gnu.org/licenses/              *
  *****************************************************************************/
 
-#pragma once
+#include "gtest/gtest.h"
+#include "Lambert.h"
+#include "Base.h"
 
-/// Solves Keplers Equation for elliptical orbits.
-/**
- This routine computes the eccentric anomaly of an elliptical orbit using the eccentricity and mean anomaly.
- Kepler's Equation is a transendental equation which is solved using Newton-Raphson iteration. An exception
- is thrown if more than 10,000 iterations are performed.
+TEST(LambertTest, ExponentialSinusoidValladoTestCase)
+{
+    Vector3 initialPosition(2.5, 0.0, 0.0); // units are ER
+    Vector3 finalPosition(1.915111, 1.606969, 0.0); // units are ER
+    double timeOfFlightDays = 5.6519; // units are TU
+    int numberRevolutions = 0;
 
- Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 2.
+    Vector3 initialVelocity, finalVelocity;
 
- @param ecc : The eccentricity.
- @param M : The mean anomaly (radians).
- @returns : The eccentric anomaly (radians).
-*/
-double SolveKeplersEquationE(double ecc, double M);
+    Lambert::ExponentialSinusoids(initialPosition, finalPosition, timeOfFlightDays, Prograde, numberRevolutions, &initialVelocity, &finalVelocity);
 
-/// Solves Keplers Equation for hyperbolic orbits.
-/**
- This routine computes the hyperbolic anomaly of an hyperbolic orbit using the eccentricity and mean anomaly.
- Kepler's Equation is a transendental equation which is solved using Newton-Raphson iteration. An exception
- is thrown if more than 10,000 iterations are performed.
-
- Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 4.
-
- @param ecc : The eccentricity.
- @param M : The mean anomaly (radians).
- @returns : The hyperbolic anomaly (radians).
-*/
-double SolveKeplersEquationH(double ecc, double M);
+    EXPECT_NEAR(0.2604450, initialVelocity.x, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(0.3688589, initialVelocity.y, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(0.0, initialVelocity.z, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(-0.4366104, finalVelocity.x, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(0.1151515, finalVelocity.y, TEST_VU_TOLERANCE);
+    EXPECT_NEAR(0.0, finalVelocity.z, TEST_VU_TOLERANCE);
+}
