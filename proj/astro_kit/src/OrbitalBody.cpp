@@ -18,3 +18,29 @@
 
 #include "OrbitalBody.h"
 #include "Base.h"
+
+OrbitalBody::OrbitalBody()
+{
+}
+
+OrbitalBody::OrbitalBody(const std::string& name, double radius, double mu)
+{
+    SetName(name);
+    SetRadius(radius);
+    SetMu(mu);
+}
+
+void OrbitalBody::SetName(const std::string& name)
+{
+    _name = name;
+}
+
+void OrbitalBody::SetRadius(double radius)
+{
+    _radius = radius;
+}
+
+void OrbitalBody::SetMu(double mu)
+{
+    _mu = mu;
+}

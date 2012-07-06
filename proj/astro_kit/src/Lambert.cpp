@@ -18,19 +18,77 @@
 
 #include "Lambert.h"
 
-namespace Lambert
-{
+// Static field initialization
+Lambert* LambertManager::_lambertSolver = NULL;
 
-void ExponentialSinusoids(const Vector3& initialPosition,
-                          const Vector3& finalPosition,
-                          double timeOfFlight,
-                          OrbitDirection orbitDirection,
-                          int numberRevolutions,
-                          Vector3* initialVelocity,
-                          Vector3* finalVelocity)
+void LambertManager::SetLambertType(LambertType lambertType)
+{
+    Cleanup();
+
+    switch (lambertType)
+    {
+    case LAMBERT_EXP_SINUSOID:
+        _lambertSolver = new ExpSinusoidLambert();
+        break;
+
+    case LAMBERT_BATTIN:
+        _lambertSolver = new BattinsLambert();
+        break;
+
+    case LAMBERT_UNIVERSAL_VAR:
+        _lambertSolver = new UniversalVarLambert();
+        break;
+
+    case LAMBERT_UNIVERSAL_VAR_GPU:
+        _lambertSolver = new UniversalVarGpuLambert();
+        break;
+
+    default:
+        throw "Invalid Lambert algorithm type";
+    }
+}
+
+void LambertManager::Evaluate(const Vector3& initialPosition,
+                              const Vector3& finalPosition,
+                              double timeOfFlight,
+                              OrbitDirection orbitDirection,
+                              int numberRevolutions,
+                              Vector3* initialVelocity,
+                              Vector3* finalVelocity)
+{
+    if (_lambertSolver != NULL)
+    {
+        _lambertSolver->Evaluate(initialPosition, finalPosition,
+                                timeOfFlight,
+                                orbitDirection,
+                                numberRevolutions,
+                                initialVelocity, finalVelocity);
+    }
+    else
+    {
+        throw "Lambert algorithm has not been specified yet";
+    }
+}
+
+void LambertManager::Cleanup()
+{
+    if (_lambertSolver != NULL)
+    {
+        delete _lambertSolver;
+        _lambertSolver = NULL;
+    }
+}
+
+void ExpSinusoidLambert::Evaluate(const Vector3& initialPosition,
+                                  const Vector3& finalPosition,
+                                  double timeOfFlight,
+                                  OrbitDirection orbitDirection,
+                                  int numberRevolutions,
+                                  Vector3* initialVelocity,
+                                  Vector3* finalVelocity)
 {
     assert(timeOfFlight > 0.0);
-    assert(orbitDirection == Prograde || orbitDirection == Retrograde);
+    assert(orbitDirection == ORBIT_DIR_PROGRADE || orbitDirection == ORBIT_DIR_RETROGRADE);
 
     // Non-dimensional units
     double R, V, T;
@@ -55,28 +113,28 @@ void ExponentialSinusoids(const Vector3& initialPosition,
     Vector3::cross(R1, R2, &CrossR1R2);
     double crossR1R2 = CrossR1R2.length();
 
-    double theta = acos(R1.dot(R2) / r2);
+    double trueAnomaly = acos(R1.dot(R2) / r2);
 
     // Direction of travel
-    if (orbitDirection == Prograde && CrossR1R2.z <= 0.0)
+    if (orbitDirection == ORBIT_DIR_PROGRADE && CrossR1R2.z <= 0.0)
     {
-        theta = MATH_2_PI - theta;
+        trueAnomaly = MATH_2_PI - trueAnomaly;
     }
-    else if (orbitDirection == Retrograde && CrossR1R2.z >= 0.0)
+    else if (orbitDirection == ORBIT_DIR_RETROGRADE && CrossR1R2.z >= 0.0)
     {
-        theta = MATH_2_PI - theta;
+        trueAnomaly = MATH_2_PI - trueAnomaly;
     }
 
     int longway = 1.0;
-    if (theta > MATH_PI)
+    if (trueAnomaly > MATH_PI)
     {
         longway = -1.0;
     }
 
-    double c      = sqrt(1.0 + r2*r2 - 2.0*r2*cos(theta));
+    double c      = sqrt(1.0 + r2*r2 - 2.0*r2*cos(trueAnomaly));
     double s      = 0.5*(1.0 + r2 + c);
     double aMin   = 0.5*s;
-    double lambda = sqrt(r2)*cos(0.5*theta)/s;
+    double lambda = sqrt(r2)*cos(0.5*trueAnomaly)/s;
 
     double input1 = -0.5233;
     double input2 =  0.5233;
@@ -154,7 +212,7 @@ void ExponentialSinusoids(const Vector3& initialPosition,
     Vector3::cross(Ih, R1, &CrossIhR1);
     Vector3::cross(Ih, R2u, &CrossIhR2u);
 
-    double sinHalfTheta = sin(0.5 * theta);
+    double sinHalfTheta = sin(0.5 * trueAnomaly);
 
     // Radial and tangential departure velocity
     double vr1 = (1.0 / eta / sqrt(aMin)) * ((2.0 * lambda * aMin) - lambda - (x * eta));
@@ -162,14 +220,14 @@ void ExponentialSinusoids(const Vector3& initialPosition,
 
     // Radial and tangential arr1val velocity
     double vt2 = vt1 / r2;
-    double vr2 = (vt1 - vt2) / tan(0.5 * theta) - vr1;
+    double vr2 = (vt1 - vt2) / tan(0.5 * trueAnomaly) - vr1;
 
     // Velocity vectors
     *initialVelocity = V * ((vr1 * R1)  + (vt1 * CrossIhR1));
     *finalVelocity =   V * ((vr2 * R2u) + (vt2 * CrossIhR2u));
 }
 
-void CalculateTimeOfFlight(double x, double s, double c, int longway, double N, double* tof)
+void ExpSinusoidLambert::CalculateTimeOfFlight(double x, double s, double c, int longway, double N, double* tof)
 {
     double a = 0.5*s / (1.0 - x*x);
     
@@ -188,23 +246,23 @@ void CalculateTimeOfFlight(double x, double s, double c, int longway, double N, 
     }
 }
 
-void BattinsMethod(const Vector3& initialPosition,
-                   const Vector3& finalPosition,
-                   double timeOfFlightDays,
-                   OrbitDirection orbitDirection,
-                   int numberRevolutions,
-                   Vector3* initialVelocity,
-                   Vector3* finalVelocity)
+void BattinsLambert::Evaluate(const Vector3& initialPosition,
+                              const Vector3& finalPosition,
+                              double timeOfFlightDays,
+                              OrbitDirection orbitDirection,
+                              int numberRevolutions,
+                              Vector3* initialVelocity,
+                              Vector3* finalVelocity)
 {
 }
 
-void UniversalVariables(const Vector3& initialPosition,
-                        const Vector3& finalPosition,
-                        double timeOfFlightDays,
-                        OrbitDirection orbitDirection,
-                        int numberRevolutions,
-                        Vector3* initialVelocity,
-                        Vector3* finalVelocity)
+void UniversalVarLambert::Evaluate(const Vector3& initialPosition,
+                                   const Vector3& finalPosition,
+                                   double timeOfFlightDays,
+                                   OrbitDirection orbitDirection,
+                                   int numberRevolutions,
+                                   Vector3* initialVelocity,
+                                   Vector3* finalVelocity)
 {
     // Convert time of flight from days to seconds.
     double tofSeconds = timeOfFlightDays * MATH_DAY_TO_SEC;
@@ -220,31 +278,29 @@ void UniversalVariables(const Vector3& initialPosition,
     Vector3::cross(Ri, Rf, &C);
 
     // True anomaly
-    double theta = acos(Ri.dot(Rf) / r1 / r2);
+    double trueAnomaly = acos(Ri.dot(Rf) / r1 / r2);
 
     // Direction of travel
-    if (orbitDirection == Prograde && C.z <= 0.0)
+    if (orbitDirection == ORBIT_DIR_PROGRADE && C.z <= 0.0)
     {
-        theta = MATH_2_PI - theta;
+        trueAnomaly = MATH_2_PI - trueAnomaly;
     }
-    else if (orbitDirection == Retrograde && C.z >= 0.0)
+    else if (orbitDirection == ORBIT_DIR_RETROGRADE && C.z >= 0.0)
     {
-        theta = MATH_2_PI - theta;
+        trueAnomaly = MATH_2_PI - trueAnomaly;
     }
 
-    double A = sin(theta) * sqrt(r1 * r2 / (1.0 - cos(theta)));
+    double A = sin(trueAnomaly) * sqrt(r1 * r2 / (1.0 - cos(trueAnomaly)));
     
     double z = -1.0;
 }
 
-void UniversalVariablesGPU(const Vector3& initialPosition,
-                           const Vector3& finalPosition,
-                           double timeOfFlightDays,
-                           OrbitDirection orbitDirection,
-                           int numberRevolutions,
-                           Vector3* initialVelocity,
-                           Vector3* finalVelocity)
+void UniversalVarGpuLambert::Evaluate(const Vector3& initialPosition,
+                                      const Vector3& finalPosition,
+                                      double timeOfFlightDays,
+                                      OrbitDirection orbitDirection,
+                                      int numberRevolutions,
+                                      Vector3* initialVelocity,
+                                      Vector3* finalVelocity)
 {
 }
-
-} // namespace

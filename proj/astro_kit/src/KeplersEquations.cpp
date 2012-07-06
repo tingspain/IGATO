@@ -19,18 +19,18 @@
 #include "KeplersEquations.h"
 #include "Base.h"
 
-double SolveKeplersEquationE(double ecc, double M)
+double SolveKeplersEquationE(double eccentricity, double M)
 {
-    assert(ecc >= 0.0 && ecc < 1.0);
+    assert(eccentricity >= 0.0 && eccentricity < 1.0);
 
     double E; // eccentric anomaly (radians)
     if (M < MATH_PI)
     {
-        E = M + 0.5*ecc;
+        E = M + 0.5*eccentricity;
     }
     else
     {
-        E = M - 0.5*ecc;
+        E = M - 0.5*eccentricity;
     }
  
     int counter = 0;
@@ -39,7 +39,7 @@ double SolveKeplersEquationE(double ecc, double M)
     double ratio = 1.0;
     while (fabs(ratio) > MATH_TOLERANCE && counter < MAX_COUNTER)
     {
-        ratio = (M - E + ecc*sin(E)) / (1 - ecc*cos(E));
+        ratio = (M - E + eccentricity*sin(E)) / (1 - eccentricity*cos(E));
         E += ratio;
         counter++;
     }
@@ -53,32 +53,32 @@ double SolveKeplersEquationE(double ecc, double M)
     return E;
 }
 
-double SolveKeplersEquationH(double ecc, double M)
+double SolveKeplersEquationH(double eccentricity, double M)
 {
-    assert (ecc >= 1.0);
+    assert (eccentricity >= 1.0);
 
     double H;
 
-    if (ecc < 1.6)
+    if (eccentricity < 1.6)
     {
         if (M > MATH_PI || (M > -MATH_PI && M < 0.0))
         {
-            H = M - ecc;
+            H = M - eccentricity;
         }
         else
         {
-            H = M + ecc;
+            H = M + eccentricity;
         }
     }
     else
     {
-        if (ecc < 3.6 && fabs(M) > MATH_PI)
+        if (eccentricity < 3.6 && fabs(M) > MATH_PI)
         {
-            H = M - Sign(M)*ecc;
+            H = M - Sign(M)*eccentricity;
         }
         else
         {
-            H = M / (ecc - 1.0);
+            H = M / (eccentricity - 1.0);
         }
     }
 
@@ -88,7 +88,7 @@ double SolveKeplersEquationH(double ecc, double M)
     double ratio = 1.0;
     while (fabs(ratio) > MATH_TOLERANCE && counter < MAX_COUNTER)
     {
-        ratio = (M - ecc*sinh(H) + H) / (ecc*cosh(H) - 1.0);
+        ratio = (M - eccentricity*sinh(H) + H) / (eccentricity*cosh(H) - 1.0);
         H += ratio;
         counter++;
     }

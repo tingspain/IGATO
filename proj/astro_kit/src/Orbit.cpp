@@ -22,6 +22,10 @@
 
 Orbit::Orbit(double mu)
 {
+    _init = false;
+    _type = ORBIT_INVALID_TYPE;
+    _orbitalElementsState = STATE_DIRTY;
+    _stateVectorState = STATE_DIRTY;
     _mu = mu;
 }
 
@@ -37,10 +41,10 @@ Orbit::Orbit(const Vector3& position, const Vector3& velocity, double mu)
     SetStateVector(position, velocity);
 }
 
-Orbit::Orbit(const OrbitalElements& coes, double mu)
+Orbit::Orbit(const OrbitalElements& orbitalElements, double mu)
 {
     _mu = mu;
-    SetOrbitalElements(coes);
+    SetOrbitalElements(orbitalElements);
 }
 
 void Orbit::SetStateVector(const StateVector& stateVector)
@@ -50,22 +54,33 @@ void Orbit::SetStateVector(const StateVector& stateVector)
 
 void Orbit::SetStateVector(const Vector3& position, const Vector3& velocity)
 {
+    if (position == _stateVector.position && velocity == _stateVector.velocity)
+        return;
+
     _stateVector.position = position;
     _stateVector.velocity = velocity;
 
-    _coesState = DIRTY;
+    _orbitalElementsState = STATE_DIRTY;
+
+    _init = true; 
 }
 
-void Orbit::SetOrbitalElements(const OrbitalElements& coes)
+void Orbit::SetOrbitalElements(const OrbitalElements& orbitalElements)
 {
-    _coes = coes;
+    if (orbitalElements == _orbitalElements)
+        return;
 
-    _stateVectorState = DIRTY;
+    _orbitalElements = orbitalElements;
+
+    _stateVectorState = STATE_DIRTY;
+    _init = true;
 }
 
 const StateVector& Orbit::GetStateVector() const
 {
-    if (_stateVectorState == DIRTY)
+    assert(_init);
+
+    if (_stateVectorState == STATE_DIRTY)
     {
         UpdateStateVector();
     }
@@ -75,27 +90,64 @@ const StateVector& Orbit::GetStateVector() const
 
 const OrbitalElements& Orbit::GetOrbitalElements() const
 {
-    if (_coesState == DIRTY)
+    assert(_init);
+
+    if (_orbitalElementsState == STATE_DIRTY)
     {
         UpdateOrbitalElements();
     }
 
-    return _coes;
+    return _orbitalElements;
+}
+
+OrbitType Orbit::GetType() const
+{
+    assert(_init);
+
+    if (_orbitalElementsState == STATE_DIRTY)
+    {
+        UpdateOrbitalElements();
+    }
+
+    double eccentricity = _orbitalElements.eccentricity;
+    if (eccentricity == ASTRO_ECC_CIRCULAR)
+    {
+        return ORBIT_CIRCULAR;
+    }
+    else if (eccentricity > ASTRO_ECC_CIRCULAR &&
+             eccentricity < ASTRO_ECC_PARABOLIC)
+    {
+        return ORBIT_ELLIPTICAL;
+    }
+    else if (eccentricity == ASTRO_ECC_PARABOLIC)
+    {
+        return ORBIT_PARABOLIC;
+    }
+    else if (eccentricity > ASTRO_ECC_PARABOLIC)
+    {
+        return ORBIT_HYPERBOLIC;
+    }
+    else
+    {
+        throw "Invalid eccentricity value";
+    }
 }
 
 void Orbit::UpdateStateVector() const
 {
-    ConvertOrbitalElements2StateVector(_coes, &_stateVector);   
-    _stateVectorState = CLEAN;
+    ConvertOrbitalElements2StateVector(_orbitalElements, &_stateVector);   
+    _stateVectorState = STATE_CLEAN;
 }
 
 void Orbit::UpdateOrbitalElements() const
 {
-    ConvertStateVector2OrbitalElements(_stateVector, &_coes);
-    _coesState = CLEAN;
+    ConvertStateVector2OrbitalElements(_stateVector, &_orbitalElements);
+    _orbitalElementsState = STATE_CLEAN;
 }
 
 void Orbit::Propagate(double timeOfFlight)
 {
+    assert(_init);
+
 
 }

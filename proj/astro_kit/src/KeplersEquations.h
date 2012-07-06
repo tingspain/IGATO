@@ -26,11 +26,11 @@
 
  Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 2.
 
- @param ecc : The eccentricity.
+ @param eccentricity : The eccentricity.
  @param M : The mean anomaly (radians).
  @returns : The eccentric anomaly (radians).
 */
-double SolveKeplersEquationE(double ecc, double M);
+double SolveKeplersEquationE(double eccentricity, double M);
 
 /// Solves Keplers Equation for hyperbolic orbits.
 /**
@@ -40,8 +40,8 @@ double SolveKeplersEquationE(double ecc, double M);
 
  Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 4.
 
- @param ecc : The eccentricity.
+ @param eccentricity : The eccentricity.
  @param M : The mean anomaly (radians).
  @returns : The hyperbolic anomaly (radians).
 */
-double SolveKeplersEquationH(double ecc, double M);
+double SolveKeplersEquationH(double eccentricity, double M);

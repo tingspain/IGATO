@@ -14,6 +14,9 @@
     <Filter Include="ext\gameplay">
       <UniqueIdentifier>{4103265a-dd3e-4e68-8794-c9d5a0e7a88f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ext\jpl_eph">
+      <UniqueIdentifier>{008cf687-d4a8-44de-8e15-ac00cc06398b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Orbit.h">
@@ -40,6 +43,24 @@
     <ClInclude Include="..\src\OrbitalBody.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Utility.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Planet.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Ephemeris.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ext\jpl_eph\src\jpleph.h">
+      <Filter>ext\jpl_eph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ext\jpl_eph\src\jpl_int.h">
+      <Filter>ext\jpl_eph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Arcs.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Orbit.cpp">
@@ -61,6 +82,21 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\OrbitalBody.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Planet.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Ephemeris.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\jpl_eph\src\jpleph.cpp">
+      <Filter>ext\jpl_eph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Arcs.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

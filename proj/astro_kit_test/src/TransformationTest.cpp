@@ -34,18 +34,18 @@ protected:
     Vector3 _perifocalVector;
     Vector3 _inertialVector;
 
-    double _incl;
+    double _inclination;
     double _raan;
-    double _omega;
+    double _argPerigee;
 };
 
 TEST_F(TransformationTest, InputVectorIsZero)
 {
     _perifocalVector = Vector3(0.0f, 0.0f, 0.0f);
-    _incl = 30.0 * MATH_DEG_TO_RAD;
+    _inclination = 30.0 * MATH_DEG_TO_RAD;
     _raan = 40.0 * MATH_DEG_TO_RAD;
-    _omega = 60.0 * MATH_DEG_TO_RAD;
-    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    _argPerigee = 60.0 * MATH_DEG_TO_RAD;
+    TransformPerifocal2Inertial(_perifocalVector, _inclination, _raan, _argPerigee, &_inertialVector);
     EXPECT_EQ(0.0, _inertialVector.x);
     EXPECT_EQ(0.0, _inertialVector.y);
     EXPECT_EQ(0.0, _inertialVector.z);
@@ -54,10 +54,10 @@ TEST_F(TransformationTest, InputVectorIsZero)
 TEST_F(TransformationTest, InputAnglesAreZero)
 {
     _perifocalVector = Vector3(6285.0, 3628.6, 0.0);
-    _incl = 0.0;
+    _inclination = 0.0;
     _raan = 0.0;
-    _omega = 0.0;
-    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    _argPerigee = 0.0;
+    TransformPerifocal2Inertial(_perifocalVector, _inclination, _raan, _argPerigee, &_inertialVector);
     EXPECT_EQ(_perifocalVector.x, _inertialVector.x);
     EXPECT_EQ(_perifocalVector.y, _inertialVector.y);
     EXPECT_EQ(_perifocalVector.z, _inertialVector.z);
@@ -67,10 +67,10 @@ TEST_F(TransformationTest, InputAnglesAreZero)
 TEST_F(TransformationTest, SolvesValladoTestCase)
 {
     _perifocalVector = Vector3(-0.0731819, 1.7947281, 0.0); // units are ER
-    _incl = 87.87 * MATH_DEG_TO_RAD;
+    _inclination = 87.87 * MATH_DEG_TO_RAD;
     _raan = 227.89 * MATH_DEG_TO_RAD;
-    _omega = 53.38 * MATH_DEG_TO_RAD;
-    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    _argPerigee = 53.38 * MATH_DEG_TO_RAD;
+    TransformPerifocal2Inertial(_perifocalVector, _inclination, _raan, _argPerigee, &_inertialVector);
     EXPECT_NEAR(1.02308, _inertialVector.x, 1e-4);
     EXPECT_NEAR(1.07579, _inertialVector.y, 1e-4);
     EXPECT_NEAR(1.01113, _inertialVector.z, 1e-4);
@@ -80,10 +80,10 @@ TEST_F(TransformationTest, SolvesValladoTestCase)
 TEST_F(TransformationTest, SolvesCurtisTestCase)
 {
     _perifocalVector = Vector3(6285.0, 3628.6, 0.0);
-    _incl = 30.0 * MATH_DEG_TO_RAD;
+    _inclination = 30.0 * MATH_DEG_TO_RAD;
     _raan = 40.0 * MATH_DEG_TO_RAD;
-    _omega = 60.0 * MATH_DEG_TO_RAD;
-    TransformPerifocal2Inertial(_perifocalVector, _incl, _raan, _omega, &_inertialVector);
+    _argPerigee = 60.0 * MATH_DEG_TO_RAD;
+    TransformPerifocal2Inertial(_perifocalVector, _inclination, _raan, _argPerigee, &_inertialVector);
     EXPECT_NEAR(-4040.0, _inertialVector.x, 1.0);
     EXPECT_NEAR(4815.0, _inertialVector.y, 1.0);
     EXPECT_NEAR(3629.0, _inertialVector.z, 1.0);

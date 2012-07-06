@@ -101,9 +101,11 @@
   <ItemGroup>
     <ClCompile Include="..\src\AstroKitTestMain.cpp" />
     <ClCompile Include="..\src\ConversionsTest.cpp" />
+    <ClCompile Include="..\src\EphemerisTest.cpp" />
     <ClCompile Include="..\src\KeplersEquationsTest.cpp" />
     <ClCompile Include="..\src\LambertTest.cpp" />
     <ClCompile Include="..\src\OrbitTest.cpp" />
+    <ClCompile Include="..\src\PlanetTest.cpp" />
     <ClCompile Include="..\src\TransformationTest.cpp" />
   </ItemGroup>
   <ItemGroup>

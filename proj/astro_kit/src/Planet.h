@@ -17,54 +17,33 @@
  *****************************************************************************/
 
 #pragma once
-#include "Base.h"
+#include "OrbitalBody.h"
+#include <map>
+#include <string>
 
-class Orbit
+// Forward declarations
+struct OrbitalElements;
+
+class Planet : public OrbitalBody
 {
 public:
-    Orbit(double mu);
-    Orbit(const StateVector& stateVector, double mu);
-    Orbit(const Vector3& position, const Vector3& velocity, double mu);
-    Orbit(const OrbitalElements& orbitalElements, double mu);
+    Planet();
+    Planet(int planetId);
+    Planet(std::string planetName);
 
-    void SetStateVector(const StateVector& stateVector);
-    void SetStateVector(const Vector3& position, const Vector3& velocity);
-    void SetOrbitalElements(const OrbitalElements& orbitalElements);
-
-    const StateVector& GetStateVector() const;
-    const OrbitalElements& GetOrbitalElements() const;
-    double GetMu() const;
-    OrbitType GetType() const;
-
-    bool IsInit() const;
+    virtual void GetOrbitAtEpoch(const Epoch& epoch, int ephemerisType, OrbitalElements* orbitalElements, StateVector* stateVector) const;
     
-    void Propagate(double timeOfFlight);
+    static void GetPlanetNameFromId(int planetId, std::string* planetName);
+    static void GetPlanetIdFromName(const std::string& planetName, int* planetId);
 
 private:
-    Orbit(); /// Standard ctor;
-    void UpdateStateVector() const;
-    void UpdateOrbitalElements() const;
+    typedef std::map<int, std::string> PlanetMap;
 
-private:
-    bool _init;
-    double _mu;
-    double _radius;
-    OrbitType _type;   
+    static PlanetMap CreatePlanetMap();
 
-    mutable StateVector _stateVector;
-    mutable OrbitalElements _orbitalElements;
+protected:
+    int _planetId;
 
-    mutable State _stateVectorState;
-    mutable State _orbitalElementsState;
+private:    
+    static const PlanetMap _planetMap;  
 };
-
-// Inline Methods
-inline double Orbit::GetMu() const
-{
-    return _mu;
-}
-
-inline bool Orbit::IsInit() const
-{
-    return _init;
-}

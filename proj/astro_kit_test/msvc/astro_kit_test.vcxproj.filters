@@ -24,5 +24,11 @@
     <ClCompile Include="..\src\LambertTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\EphemerisTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PlanetTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

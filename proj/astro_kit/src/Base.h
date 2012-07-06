@@ -18,7 +18,7 @@
 
 #pragma once
 // Base file for common includes, constants, and functions.
-// Reference: GamePlay 3D game framework (gameplay3d.org) 
+// Reference: Inspired by GamePlay 3D game framework (gameplay3d.org) 
 
 // C/C++
 #include <new>
@@ -70,11 +70,83 @@ using gameplay::Vector3;
 #endif
 
 // Fundamental datatypes
+enum State
+{
+    STATE_INVALID_TYPE = -1,
+    STATE_DIRTY,
+    STATE_CLEAN,
+    STATE_COUNT
+};
+
 enum OrbitDirection
 {
-    Invalid = -1,
-    Prograde,
-    Retrograde
+    ORBIT_DIR_INVALID_DIR = -1,
+    ORBIT_DIR_PROGRADE,
+    ORBIT_DIR_RETROGRADE,
+    ORBIT_DIR_COUNT
+};
+
+enum OrbitType
+{
+    ORBIT_INVALID_TYPE = -1,
+    ORBIT_CIRCULAR,
+    ORBIT_ELLIPTICAL,
+    ORBIT_PARABOLIC,
+    ORBIT_HYPERBOLIC,
+    ORBIT_COUNT
+};
+
+enum OrbitalBodyType
+{
+    ORBIT_BODY_INVALID_TYPE = -1,
+    ORBIT_BODY_PLANET,
+    ORBIT_BODY_MOON,
+    ORBIT_BODY_ASTEROID,
+    ORBIT_BODY_COMET,
+    ORBIT_BODY_SATELLITE,
+    ORBIT_BODY_COUNT
+};
+
+enum Planets
+{
+    PLANET_INVALID_TYPE = -1,
+    PLANET_MERCURY,
+    PLANET_VENUS,
+    PLANET_EARTH,
+    PLANET_MARS,
+    PLANET_JUPITER,
+    PLANET_SATURN,
+    PLANET_URANUS,
+    PLANET_NEPTUNE,
+    PLANET_PLUTO,
+    PLANET_COUNT
+};
+
+enum EphemerisType
+{
+    EPHEMERIS_INVALID_TYPE = -1,
+    EPHEMERIS_ANALYTICAL,
+    EPHEMERIS_JPL,
+    EPHEMERIS_COUNT
+};
+
+enum LambertType
+{
+    LAMBERT_INVALID_TYPE = -1,
+    LAMBERT_EXP_SINUSOID,
+    LAMBERT_BATTIN,
+    LAMBERT_UNIVERSAL_VAR,
+    LAMBERT_UNIVERSAL_VAR_GPU,
+    LAMBERT_COUNT
+};
+
+enum PropagateType
+{
+    PROPAGATE_INVALID_TYPE = -1,
+    PROPAGATE_COES,
+    PROPAGATE_RV,
+    PROPAGATE_JPL_EPHEMERIS,
+    PROPAGATE_COUNT,
 };
 
 /// State Vector
@@ -82,18 +154,35 @@ struct StateVector
 {
     Vector3 position;
     Vector3 velocity;
+
+    inline bool operator==(const StateVector& rhs) const
+    {
+        return (position == rhs.position && velocity == rhs.velocity);
+    }
 };
 
 /// Classical Orbital Elements
 struct OrbitalElements
 {
-    double a;       /// semimajor axis;
-    double ecc;     /// eccentricity;
-    double omega;   /// arguementOfPerigee;
-    double incl;    /// inclination
-    double raan;    /// right ascension of the ascending node
-    double theta;   /// true anomaly
-    double tp;      /// time of perigee  
+    double semimajorAxis; /// Semimajor axis
+    double eccentricity;  /// Eccentricity
+    double argPerigee;    /// Arguement of perigee
+    double inclination;   /// Inclination
+    double raan;          /// Right ascension of the ascending node
+    double trueAnomaly;   /// True anomaly
+    double timePerigee;   /// Time of perigee
+
+    inline bool operator==(const OrbitalElements& rhs) const
+    {
+        return (semimajorAxis == rhs.semimajorAxis &&
+                eccentricity  == rhs.eccentricity  &&
+                argPerigee    == rhs.argPerigee    &&
+                inclination   == rhs.inclination   &&
+                raan          == rhs.raan          &&
+                trueAnomaly   == rhs.trueAnomaly   &&
+                timePerigee   == rhs.timePerigee);
+    }
+    
 };
 
 // Math
@@ -122,12 +211,15 @@ const double ASTRO_AU_TO_KM         = 149597870.66;     // Convert Astronomical 
 const double ASTRO_ER_TO_KM         = 6378.137;         // Mean equitorial radius of Earth (ER) to km
 const double ASTRO_MU_SUN           = 132712428000;     // Gravitional Parameter of the Sun (km3/s2)
 const double ASTRO_MU_EARTH         = 398600.4418;      // Gravitional Parameter of the Earth
- 
+const double ASTRO_ECC_CIRCULAR     = 0.0;              // Eccentricity of a ciruclar orbit
+const double ASTRO_ECC_PARABOLIC    = 1.0;              // Eccentricity of a parabolic orbit
+const double ASTRO_INCL_EQUATORIAL  = 0.0;              // Inclination of an equatorial orbit
+
 // Unit testing
 const double TEST_DU_TOLERANCE      = 1.0e-3;
 const double TEST_VU_TOLERANCE      = 1.0e-3;
 const double TEST_TU_TOLERANCE      = 1.0e-3;
-const double TEST_ANGLE_TOLERANCEE  = 1.0e-3;
+const double TEST_ANGLE_TOLERANCE   = 1.0e-3;
 const double TEST_ECC_TOLERANCE     = 1.0e-4;
 
 // NOMINMAX makes sure that windef.h doesn't add macros min and max
@@ -186,6 +278,10 @@ inline double acosh(double x)
 /// Returns the inverse hyperbolic tangent of x.
 inline double atanh(double x)
 { return 0.5f*log((1.0f+x)/(1.0f-x)); }
+
+/// Returns the square of x.
+inline double SQR(double x)
+{return x*x;}
 
 #if defined(WIN32)
     //#pragma warning( disable : 4172 )               // returning address of local variable or temporary

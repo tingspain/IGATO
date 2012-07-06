@@ -19,10 +19,49 @@
 #pragma once
 #include "Base.h"
 
-namespace Lambert
-{
+// Forward declaration
+class Lambert;
 
-void ExponentialSinusoids(const Vector3& initialPosition,
+class LambertManager
+{
+public:
+    static void SetLambertType(LambertType lambertType);
+
+    static void Evaluate(const Vector3& initialPosition,
+                         const Vector3& finalPosition,
+                         double timeOfFlight,
+                         OrbitDirection orbitDirection,
+                         int numberRevolutions,
+                         Vector3* initialVelocity,
+                         Vector3* finalVelocity);
+    
+    static void Cleanup();
+
+private:
+    /// Static class only, prevent instantiation.
+    LambertManager();
+
+private:
+    static Lambert* _lambertSolver;
+};
+
+/// Abstract base class for all Lambert solver algorithms.
+class Lambert
+{
+public:
+    virtual void Evaluate(const Vector3& initialPosition,
+                          const Vector3& finalPosition,
+                          double timeOfFlight,
+                          OrbitDirection orbitDirection,
+                          int numberRevolutions,
+                          Vector3* initialVelocity,
+                          Vector3* finalVelocity) = 0;
+};
+
+class ExpSinusoidLambert : public Lambert
+{
+public:
+    virtual void Evaluate(const Vector3& initialPosition,
                           const Vector3& finalPosition,
                           double timeOfFlight,
                           OrbitDirection orbitDirection,
@@ -30,30 +69,42 @@ void ExponentialSinusoids(const Vector3& initialPosition,
                           Vector3* initialVelocity,
                           Vector3* finalVelocity);
 
-void BattinsMethod(const Vector3& initialPosition,
-                   const Vector3& finalPosition,
-                   double timeOfFlightDays,
-                   OrbitDirection orbitDirection,
-                   int numberRevolutions,
-                   Vector3* initialVelocity,
-                   Vector3* finalVelocity);
+protected:
+    void CalculateTimeOfFlight(double x, double s, double c, int longway, double N, double* tof);
+};
 
-void UniversalVariables(const Vector3& initialPosition,
-                        const Vector3& finalPosition,
-                        double timeOfFlightDays,
-                        OrbitDirection orbitDirection,
-                        int numberRevolutions,
-                        Vector3* initialVelocity,
-                        Vector3* finalVelocity);
+class BattinsLambert : public Lambert
+{
+public:
+    virtual void Evaluate(const Vector3& initialPosition,
+                          const Vector3& finalPosition,
+                          double timeOfFlight,
+                          OrbitDirection orbitDirection,
+                          int numberRevolutions,
+                          Vector3* initialVelocity,
+                          Vector3* finalVelocity);
+};
 
-void UniversalVariablesGPU(const Vector3& initialPosition,
-                           const Vector3& finalPosition,
-                           double timeOfFlightDays,
-                           OrbitDirection orbitDirection,
-                           int numberRevolutions,
-                           Vector3* initialVelocity,
-                           Vector3* finalVelocity);
+class UniversalVarLambert : public Lambert
+{
+public:
+    virtual void Evaluate(const Vector3& initialPosition,
+                          const Vector3& finalPosition,
+                          double timeOfFlight,
+                          OrbitDirection orbitDirection,
+                          int numberRevolutions,
+                          Vector3* initialVelocity,
+                          Vector3* finalVelocity);
+};
 
-void CalculateTimeOfFlight(double x, double s, double c, int longway, double N, double* tof);
-
-}
+class UniversalVarGpuLambert : public Lambert
+{
+public:
+    virtual void Evaluate(const Vector3& initialPosition,
+                          const Vector3& finalPosition,
+                          double timeOfFlight,
+                          OrbitDirection orbitDirection,
+                          int numberRevolutions,
+                          Vector3* initialVelocity,
+                          Vector3* finalVelocity);
+};

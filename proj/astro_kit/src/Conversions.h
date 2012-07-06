@@ -45,24 +45,24 @@ void CalculateCanonicalUnits(double radius, double mu, double* DU, double* TU, d
 
 /// Convert state vectors to orbital elements.
 /**
- This routine calculates the classical orbital elements (coes) of an object given its position
+ This routine calculates the classical orbital elements (orbitalElements) of an object given its position
  and velocity (state) vectors.
 
  Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 9.
 
  @param stateVector : The position and velocity vectors.
- @param [out] coes : The computed orbital elements.
+ @param [out] orbitalElements : The computed orbital elements.
 */
-void ConvertStateVector2OrbitalElements(const StateVector& stateVector, OrbitalElements* coes);
+void ConvertStateVector2OrbitalElements(const StateVector& stateVector, OrbitalElements* orbitalElements);
 
 /// Convert orbital elements to state vectors.
 /**
  This routine calculates the position and velocity (state) vectors of an object given its
- classical orbital elements (coes).
+ classical orbital elements (orbitalElements).
 
  Reference: Fundamentals of Astrodynamics and Applications 3rd Edition, David Vallado, Algorithm 10.
 
- @param coes : The orbital elements.
+ @param orbitalElements : The orbital elements.
  @param [out] stateVector : The computed position and velocity vectors.
 */
-void ConvertOrbitalElements2StateVector(const OrbitalElements& coes, StateVector* stateVector);
+void ConvertOrbitalElements2StateVector(const OrbitalElements& orbitalElements, StateVector* stateVector);

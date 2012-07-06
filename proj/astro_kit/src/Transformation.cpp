@@ -18,15 +18,15 @@
 
 #include "Transformation.h"
 
-void TransformPerifocal2Inertial(const Vector3& perifocalVector, double incl, double raan, double omega, Vector3* inertialVector)
+void TransformPerifocal2Inertial(const Vector3& perifocalVector, double inclination, double raan, double argPerigee, Vector3* inertialVector)
 {
     // Precalculate common trig functions.
     float cosRAAN = cos(raan);
     float sinRAAN = sin(raan);
-    float cosOmega = cos(omega);
-    float sinOmega = sin(omega);
-    float cosIncl = cos(incl);
-    float sinIncl = sin(incl);
+    float cosOmega = cos(argPerigee);
+    float sinOmega = sin(argPerigee);
+    float cosIncl = cos(inclination);
+    float sinIncl = sin(inclination);
 
     // Build the rotation matrix
     static Vector3 row1, row2, row3;

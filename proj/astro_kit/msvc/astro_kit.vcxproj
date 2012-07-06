@@ -12,22 +12,33 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\ext\gameplay\src\Vector3.h" />
+    <ClInclude Include="..\..\..\ext\jpl_eph\src\jpleph.h" />
+    <ClInclude Include="..\..\..\ext\jpl_eph\src\jpl_int.h" />
+    <ClInclude Include="..\src\Arcs.h" />
     <ClInclude Include="..\src\Base.h" />
     <ClInclude Include="..\src\Conversions.h" />
+    <ClInclude Include="..\src\Ephemeris.h" />
     <ClInclude Include="..\src\Lambert.h" />
     <ClInclude Include="..\src\Orbit.h" />
     <ClInclude Include="..\src\OrbitalBody.h" />
+    <ClInclude Include="..\src\Planet.h" />
     <ClInclude Include="..\src\Transformation.h" />
     <ClInclude Include="..\src\KeplersEquations.h" />
+    <ClInclude Include="..\src\Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\ext\gameplay\src\Vector3.cpp" />
+    <ClCompile Include="..\..\..\ext\jpl_eph\src\jpleph.cpp" />
+    <ClCompile Include="..\src\Arcs.cpp" />
     <ClCompile Include="..\src\Conversions.cpp" />
+    <ClCompile Include="..\src\Ephemeris.cpp" />
     <ClCompile Include="..\src\Lambert.cpp" />
     <ClCompile Include="..\src\Orbit.cpp" />
     <ClCompile Include="..\src\OrbitalBody.cpp" />
+    <ClCompile Include="..\src\Planet.cpp" />
     <ClCompile Include="..\src\Transformation.cpp" />
     <ClCompile Include="..\src\KeplersEquations.cpp" />
+    <ClCompile Include="..\src\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\ext\gameplay\src\Vector3.inl" />
@@ -79,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\..\..\ext/gameplay/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ext/gameplay/src;..\..\..\ext/jpl_eph/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -100,7 +111,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\..\..\ext/gameplay/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ext/gameplay/src;..\..\..\ext/jpl_eph/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

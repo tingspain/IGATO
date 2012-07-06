@@ -33,109 +33,144 @@ void CalculateCanonicalUnits(double radius, double mu, double* DU, double* TU, d
     *VU = 1.0 / vu;
 }
 
-void ConvertStateVector2OrbitalElements(const StateVector& stateVector, OrbitalElements* coes)
+void ConvertStateVector2OrbitalElements(const StateVector& stateVector, OrbitalElements* orbitalElements)
 {
     // Position and velocity vectors, magnitudes, and dot product.
-    const Vector3& R = stateVector.position;
-    const Vector3& V = stateVector.velocity;
-    double r = R.length();
-    double v = V.length();
-    double rv = R.dot(V);
-
-    // Precalculate for speed.
-    //double oneOverR = 1.0 / r;
+    const Vector3& Pos = stateVector.position;
+    const Vector3& Vel = stateVector.velocity;
+    double pos = Pos.length();
+    double vel = Vel.length();
+    double posDotVel = Pos.dot(Vel);
 
     // Specific angular momentum
-    static Vector3 H;
-    Vector3::cross(R, V, &H);
-    double h = H.length();
+    static Vector3 SpecificAngularMomentum;
+    Vector3::cross(Pos, Vel, &SpecificAngularMomentum);
+    double specificAngularMomentum = SpecificAngularMomentum.length();
 
     // Node vector
-    static Vector3 N;
-    Vector3::cross(MATH_UNIT_VEC_K, H, &N); 
-    double n = N.length();
+    static Vector3 NodeVector;
+    Vector3::cross(MATH_UNIT_VEC_K, SpecificAngularMomentum, &NodeVector); 
+    double nodeVector = NodeVector.length();
 
     // Eccentricity
-    static Vector3 Ecc;
-    Ecc = (v*v - 1.0/r)*R - rv*V;
-    double ecc = Ecc.length();
+    static Vector3 Eccentricity;
+    Eccentricity = (SQR(vel) - 1.0/pos)*Pos - posDotVel*Vel;
+    double eccentricity = Eccentricity.length();
 
     // Semimajor axis (a) and semiparameter (p)
-    double a, p;
-    if (ecc != 1.0) // non parabolic orbit
+    double semimajorAxis, semiParameter;
+    if (eccentricity != ASTRO_ECC_PARABOLIC) // non parabolic orbit
     {
-        double xi = 0.5*v*v - 1.0/r; // specific mechanical energy
-        a = -0.5/xi;
-        p = a*(1 - ecc*ecc);
+        double specificMechEnergy = 0.5*SQR(vel) - 1.0/pos; // specific mechanical energy
+        semimajorAxis = -0.5 / specificMechEnergy;
+        semiParameter = semimajorAxis*(1 - SQR(eccentricity));
     }
     else // parabolic orbit
     {
-        a = MATH_INFINITY;
-        p = h*h;
+        semimajorAxis = MATH_INFINITY;
+        semiParameter = SQR(specificAngularMomentum);
     }
 
     // Inclination
-    double incl = acos(H.z / h);
+    double inclination = 0.0;
+    if (specificAngularMomentum > 0.0)
+    {
+        inclination = acos(SpecificAngularMomentum.z / specificAngularMomentum);
+    }
 
     // Right ascension of the ascending node
-    double raan = acos(N.x / n);
-    if (N.y < 0)
+    double raan = 0.0;
+    if (nodeVector > 0.0)
     {
-        raan = MATH_2_PI - raan;
+        raan = acos(NodeVector.x / nodeVector);
+        if (NodeVector.y < 0)
+        {
+            raan = MATH_2_PI - raan;
+        }
     }
 
     // Arguement of perigee
-    double necc = N.dot(Ecc);
-    double omega = acos(necc / n / ecc);
-    if (Ecc.z < 0.0)
+    double argPerigee = 0.0;
+    if (eccentricity != ASTRO_ECC_CIRCULAR && inclination != ASTRO_INCL_EQUATORIAL) // non-circular and non-equatorial orbit
     {
-        omega = MATH_2_PI - omega;
+        double nodeVecDotEcc = NodeVector.dot(Eccentricity);
+        argPerigee = acos(nodeVecDotEcc / nodeVector / eccentricity);
+        if (Eccentricity.z < 0.0)
+        {
+            argPerigee = MATH_2_PI - argPerigee;
+        }
     }
-
+    else if (eccentricity != ASTRO_ECC_CIRCULAR) // non-circular equatorial orbit (line of nodes is undefined)
+    {
+        argPerigee = acos(Eccentricity.x / eccentricity);
+    }
+    
     // True anomaly
-    double eccr = Ecc.dot(R);
-    double theta = acos(eccr / ecc / r);
-    if (rv < 0.0)
+    double trueAnomaly;
+    if (eccentricity != ASTRO_ECC_CIRCULAR) // non-circular orbit
     {
-        theta = MATH_2_PI - theta;
+        double eccDotPos = Eccentricity.dot(Pos);
+        trueAnomaly = acos(eccDotPos / eccentricity / pos);
+        if (posDotVel < 0.0)
+        {
+            trueAnomaly = MATH_2_PI - trueAnomaly;
+        }
     }
-
+    else if (inclination != ASTRO_INCL_EQUATORIAL) // circular orbit with non-equatorial orbit
+    {
+        double nodeVecDotPos = NodeVector.dot(Pos);
+        double nodeVecDotVel = NodeVector.dot(Vel);
+        trueAnomaly = acos(nodeVecDotPos / nodeVector / pos);
+        if (nodeVecDotVel > 0.0)
+        {
+            trueAnomaly = MATH_2_PI - trueAnomaly; // argument of latitude
+        }
+    }
+    else // circular equatorial orbit (line of nodes is undefined)
+    {
+        trueAnomaly = acos(Pos.x / pos); // true longitude
+        if (Vel.x > 0.0)
+        {
+            trueAnomaly = MATH_2_PI - trueAnomaly;
+        }
+    }
+    
     // Pack up the calculated orbital elements
-    coes->a = a;
-    coes->ecc = ecc;
-    coes->omega = omega;
-    coes->incl = incl;
-    coes->raan = raan;
-    coes->theta = theta;
+    orbitalElements->semimajorAxis = semimajorAxis;
+    orbitalElements->eccentricity = eccentricity;
+    orbitalElements->argPerigee = argPerigee;
+    orbitalElements->inclination = inclination;
+    orbitalElements->raan = raan;
+    orbitalElements->trueAnomaly = trueAnomaly;
 }
 
-void ConvertOrbitalElements2StateVector(const OrbitalElements& coes, StateVector* stateVector)
+void ConvertOrbitalElements2StateVector(const OrbitalElements& orbitalElements, StateVector* stateVector)
 {
     // Unpack the orbital elements.
-    double a = coes.a;
-    double ecc = coes.ecc;
-    double omega = coes.omega;
-    double incl = coes.incl;
-    double raan = coes.raan;
-    double theta = coes.theta;
+    double semimajorAxis = orbitalElements.semimajorAxis;
+    double eccentricity = orbitalElements.eccentricity;
+    double argPerigee = orbitalElements.argPerigee;
+    double inclination = orbitalElements.inclination;
+    double raan = orbitalElements.raan;
+    double trueAnomaly = orbitalElements.trueAnomaly;
 
     // Calculate the semiparameter
-    double p = a*(1.0 - ecc*ecc);
+    double semiParameter = semimajorAxis*(1.0 - SQR(eccentricity));
 
     // Precalculate common trig functions.
-    double cosTheta = cos(theta);
-    double sinTheta = sin(theta);
+    double cosTrueAnomaly = cos(trueAnomaly);
+    double sinTrueAnomaly = sin(trueAnomaly);
 
     // Build state vectors in perifocal reference frame
-    static Vector3 R, V;
-    R.x = p*cosTheta / (1.0 + ecc*cosTheta);
-    R.y = p*sinTheta / (1.0 + ecc*cosTheta);
-    R.z = 0.0;
-    V.x = -sqrt(1.0/p)*sinTheta;
-    V.y = sqrt(1.0/p)*(ecc + cosTheta);
-    V.z = 0.0;
+    static Vector3 Pos, Vel;
+    Pos.x = semiParameter*cosTrueAnomaly / (1.0 + eccentricity*cosTrueAnomaly);
+    Pos.y = semiParameter*sinTrueAnomaly / (1.0 + eccentricity*cosTrueAnomaly);
+    Pos.z = 0.0;
+    Vel.x = -sqrt(1.0/semiParameter)*sinTrueAnomaly;
+    Vel.y = sqrt(1.0/semiParameter)*(eccentricity + cosTrueAnomaly);
+    Vel.z = 0.0;
 
     // Transform state vectors from perifocal reference frame to inertial.
-    TransformPerifocal2Inertial(R, incl, raan, omega, &stateVector->position);
-    TransformPerifocal2Inertial(V, incl, raan, omega, &stateVector->velocity);
+    TransformPerifocal2Inertial(Pos, inclination, raan, argPerigee, &stateVector->position);
+    TransformPerifocal2Inertial(Vel, inclination, raan, argPerigee, &stateVector->velocity);
 }
